@@ -1,0 +1,57 @@
+# Using this rather than a published GitHub action to allow easier customization as desired by repo.
+name: "Get Build Version Action"
+description: "Returns the current build version"
+inputs:
+  fetch-all-tags:  
+    description: 'Shoiuld fetch all Git tags'
+    required: true
+    default: true
+outputs:
+  build-version: 
+    description: "Build Version"
+    value: ${{steps.configureBuildVersion.outputs.BUILD_VERSION}}
+runs:
+  using: "composite"
+  steps:
+  - name: Fetch all Git tags
+    run: if ($env:FETCH_ALL -eq "true") { git fetch --prune --unshallow --tags }
+    env:
+      FETCH_ALL: ${{ inputs.fetch-all-tags }}
+    shell: pwsh
+  - name: Configure build version
+    id: configureBuildVersion
+    run: |
+      $prNumber = $env:PR_NUMBER;
+      $version = "0.0.0"
+      $commitsSinceTag = '0';
+      $buildMetadata = "";
+      $gitSourceVersion = git describe --tags --abbrev=7 --always 2>$1;
+      $gitSourceVersionSplit = [regex]::split($gitSourceVersion, "-(?=\d+-\w+)");
+      $version = $gitSourceVersionSplit[0];
+      # git desribe can return one part if there are no tags or if a tag is recently commited with no commits since.
+      if($gitSourceVersionSplit.length -eq 1) { 
+        if ($gitSourceVersionSplit[0].IndexOf(".") -lt 0) {
+          $version = "0.0.0"
+          $commitHash = $gitSourceVersionSplit[0];
+          #so the 0.0.0 version is always marked as dev
+          $commitsSinceTag = '1';
+        }
+      } else {
+        $gitMetadata = $gitSourceVersionSplit[1].split("-");
+        $commitsSinceTag = $gitMetadata[0];
+        $commitHash = $gitMetadata[1];
+      }
+      
+      if ($commitHash) {$buildMetadata = "+$($commitHash)"}    
+      
+      #if using version tags like v1.0.0
+      $version = $version -replace "v", ""
+      
+      $customSuffix = $(if($prNumber){"-PR$($prNumber)"}elseif($commitsSinceTag -ne '0'){"-dev"});
+      
+      Write-Host "Git Describe: $($gitSourceVersion)"
+      Write-Host "BUILD_VERSION::$($version)$(if($customSuffix){"$($customSuffix)$($buildMetadata)"})"
+      Write-Output "::set-output name=BUILD_VERSION::$($version)$(if($customSuffix){"$($customSuffix)$($buildMetadata)"})";
+    shell: pwsh
+    env:
+      PR_NUMBER: ${{github.event.number}}

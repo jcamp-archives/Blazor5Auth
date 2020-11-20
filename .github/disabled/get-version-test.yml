@@ -1,0 +1,29 @@
+name: Get Version Test
+
+on:
+  push:
+    # branches: 
+    # branches-ignore: 
+  pull_request:
+    # branches: 
+    # branches-ignore: 
+  release:
+    branches: [ main ]
+    types: [ published ]
+
+jobs:
+
+  version:
+    name: Identify build version
+    runs-on: ubuntu-latest
+    outputs:
+      BuildVersion: ${{steps.getversion.outputs.BUILD_VERSION}}
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v2
+    - name: Get Build Version
+      id: getversion
+      uses: ./.github/workflows/get-version
+    - name: show version
+      run: echo version number ${{ steps.getversion.outputs.build-version }} 
+    

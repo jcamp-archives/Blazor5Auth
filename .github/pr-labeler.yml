@@ -1,0 +1,7 @@
+﻿feature: ['feature/*', 'feat/*']
+bug: bug/*
+bugfix: bugfix/*
+fix: fix/*
+maint: maint/*
+chore: chore/*
+dependencies: dependabot/*
