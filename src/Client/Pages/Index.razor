@@ -4,4 +4,12 @@
 
 Welcome to your new app.
 
+<AuthorizeView Roles="User">
+    <p>You can only see this if you're in the User role.</p>
+</AuthorizeView>
+
+<AuthorizeView Roles="Admin">
+    <p>You can only see this if you're in the Admin role.</p>
+</AuthorizeView>
+
 <SurveyPrompt Title="How is Blazor working for you?" />

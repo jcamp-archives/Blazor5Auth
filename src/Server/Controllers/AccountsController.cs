@@ -1,10 +1,4 @@
-﻿// Licensed to the .NET Foundation under one or more agreements.
-// The .NET Foundation licenses this file to you under the MIT license.
-// See the LICENSE file in the project root for more information.
-
-using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq;
 using System.Threading.Tasks;
 using Blazor5Auth.Server.Models;
 using Blazor5Auth.Shared;
@@ -38,7 +32,15 @@ namespace Blazor5Auth.Server.Controllers
                 var errors = result.Errors.Select(x => x.Description);
 
                 return Ok(new RegisterResult { Successful = false, Errors = errors });
+            }
 
+            // Add all new users to the User role
+            await _userManager.AddToRoleAsync(newUser, "User");
+
+            // Add new users whose email starts with 'admin' to the Admin role
+            if (newUser.Email.StartsWith("admin"))
+            {
+                await _userManager.AddToRoleAsync(newUser, "Admin");
             }
 
             return Ok(new RegisterResult { Successful = true });

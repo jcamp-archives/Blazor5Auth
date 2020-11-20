@@ -30,16 +30,15 @@ namespace Blazor5Auth.Client.Services
 
         public async Task<RegisterResult> Register(RegisterModel registerModel)
         {
-            var result = await _httpClient.PostAsJsonAsync("accounts", registerModel);
+            var response = await _httpClient.PostAsJsonAsync("accounts", registerModel);
 
-            return await result.Content.ReadFromJsonAsync<RegisterResult>();
+            return await response.Content.ReadFromJsonAsync<RegisterResult>();
         }
 
         public async Task<LoginResult> Login(LoginModel loginModel)
         {
-            var loginAsJson = JsonSerializer.Serialize(loginModel);
-            var response = await _httpClient.PostAsync("login", new StringContent(loginAsJson, Encoding.UTF8, "application/json"));
-            var loginResult = JsonSerializer.Deserialize<LoginResult>(await response.Content.ReadAsStringAsync(), new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+            var response = await _httpClient.PostAsJsonAsync("login", loginModel);
+            var loginResult = await response.Content.ReadFromJsonAsync<LoginResult>();
 
             if (!response.IsSuccessStatusCode)
             {
@@ -47,7 +46,7 @@ namespace Blazor5Auth.Client.Services
             }
 
             await _localStorage.SetItemAsync("authToken", loginResult.Token);
-            ((ApiAuthenticationStateProvider)_authenticationStateProvider).MarkUserAsAuthenticated(loginModel.Email);
+            ((ApiAuthenticationStateProvider)_authenticationStateProvider).MarkUserAsAuthenticated(loginResult.Token);
             _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("bearer", loginResult.Token);
 
             return loginResult;

@@ -35,10 +35,25 @@ namespace Blazor5Auth.Server.Controllers
 
             if (!result.Succeeded) return BadRequest(new LoginResult { Successful = false, Error = "Username and password are invalid." });
 
-            var claims = new[]
+            // without roles, this
+            //var claims = new[]
+            //{
+            //    new Claim(ClaimTypes.Name, login.Email)
+            //};
+
+            //roles
+            var user = await _signInManager.UserManager.FindByEmailAsync(login.Email);
+            var roles = await _signInManager.UserManager.GetRolesAsync(user);
+
+            var claims = new List<Claim>();
+
+            claims.Add(new Claim(ClaimTypes.Name, login.Email));
+
+            foreach (var role in roles)
             {
-                new Claim(ClaimTypes.Name, login.Email)
-            };
+                claims.Add(new Claim(ClaimTypes.Role, role));
+            }
+
 
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["JwtSecurityKey"]));
             var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);

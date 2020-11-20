@@ -358,6 +358,5 @@ MigrationBackup/
 
 #VS Code
 .vscode/
-identityserver/Server/app.db
 
 app.db*
