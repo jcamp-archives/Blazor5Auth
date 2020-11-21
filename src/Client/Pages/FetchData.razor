@@ -1,5 +1,5 @@
 ﻿@page "/fetchdata"
-@attribute [Authorize(Roles = "Admin")]
+@attribute [Authorize(Policy = Policies.IsAdmin)]
 
 @inject HttpClient Http
 

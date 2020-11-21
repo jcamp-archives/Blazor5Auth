@@ -1,5 +1,6 @@
 ﻿using Blazor5Auth.Server.Data;
 using Blazor5Auth.Server.Models;
+using Blazor5Auth.Shared;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -50,6 +51,12 @@ namespace Blazor5Auth.Server
                         IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["JwtSecurityKey"]))
                     };
                 });
+
+            services.AddAuthorization(config =>
+            {
+                config.AddPolicy(Policies.IsAdmin, Policies.IsAdminPolicy());
+                config.AddPolicy(Policies.IsUser, Policies.IsUserPolicy());
+            });
 
             services.AddControllersWithViews();
             services.AddRazorPages();

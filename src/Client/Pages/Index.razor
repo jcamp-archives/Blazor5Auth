@@ -4,12 +4,12 @@
 
 Welcome to your new app.
 
-<AuthorizeView Roles="User">
-    <p>You can only see this if you're in the User role.</p>
+<AuthorizeView Policy="@Policies.IsUser">
+    <p>You can only see this if you satisfy the IsUser policy.</p>
 </AuthorizeView>
 
-<AuthorizeView Roles="Admin">
-    <p>You can only see this if you're in the Admin role.</p>
+<AuthorizeView Policy="@Policies.IsAdmin">
+    <p>You can only see this if you satisfy the IsAdmin policy.</p>
 </AuthorizeView>
 
 <SurveyPrompt Title="How is Blazor working for you?" />

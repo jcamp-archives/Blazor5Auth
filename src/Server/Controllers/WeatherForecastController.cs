@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace Blazor5Auth.Server.Controllers
 {
-    [Authorize(Roles = "Admin")]
+    [Authorize(Policy = Policies.IsAdmin)]
     [ApiController]
     [Route("[controller]")]
     public class WeatherForecastController : ControllerBase
