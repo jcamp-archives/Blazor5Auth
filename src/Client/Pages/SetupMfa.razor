@@ -1,0 +1,97 @@
+﻿@page "/setupmfa"
+@inject IAuthService AuthService
+@inject NavigationManager NavigationManager
+@inject HttpClient Http
+@attribute [Authorize]
+
+<h1>Configure authenticator app</h1>
+
+@if (ShowErrors)
+{
+    <div class="alert alert-danger" role="alert">
+        <p>@Error</p>
+    </div>
+}
+@if (!string.IsNullOrEmpty(Success))
+{
+    <div class="alert alert-success alert-dismissible" role="alert">
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        @Success
+    </div>
+}
+@if (Model != null)
+{
+    <div>
+        <p>To use an authenticator app go through the following steps:</p>
+        <ol class="list">
+            <li>
+                <p>
+                    Download a two-factor authenticator app like Microsoft Authenticator for
+                    <a href="https://go.microsoft.com/fwlink/?Linkid=825072">Android</a> and
+                    <a href="https://go.microsoft.com/fwlink/?Linkid=825073">iOS</a> or
+                    Google Authenticator for
+                    <a href="https://play.google.com/store/apps/details?id=com.google.android.apps.authenticator2&amp;hl=en">Android</a> and
+                    <a href="https://itunes.apple.com/us/app/google-authenticator/id388497605?mt=8">iOS</a>.
+                </p>
+            </li>
+            <li>
+                <p>Scan the QR Code or enter this key <kbd>@Model.SharedKey</kbd> into your two factor authenticator app. Spaces and casing do not matter.</p>
+                <img src="@($"data:image/png;base64,{Model.QrCodeBase64}")" />
+            </li>
+            <li>
+                <p>
+                    Once you have scanned the QR code or input the key above, your two factor authentication app will provide you
+                    with a unique code. Enter the code in the confirmation box below.
+                </p>
+                <div class="row">
+                    <div class="col-md-6">
+                        <EditForm Model="VerifyModel" OnValidSubmit="HandleVerify">
+                            <DataAnnotationsValidator />
+                            <ValidationSummary />
+                            <div class="form-group">
+                                <label for="verify">Verification Code</label>
+                                <InputText Id="verify" class="form-control" @bind-Value="VerifyModel.Verification" />
+                                <ValidationMessage For="@(() => VerifyModel.Verification)" />
+                            </div>
+                            <button type="submit" class="btn btn-primary">Verify</button>
+                        </EditForm>
+                    </div>
+                </div>
+            </li>
+        </ol>
+    </div>
+}
+
+@code {
+
+    private VerifyMfaModel VerifyModel = new VerifyMfaModel();
+    private SetupMfaModel Model;
+    private bool ShowErrors;
+    private string Error = "";
+    private string Success = "";
+
+    protected override async Task OnInitializedAsync()
+    {
+        Model = await Http.GetFromJsonAsync<SetupMfaModel>("api/setupmfa");
+    }
+
+    private async Task HandleVerify()
+    {
+        ShowErrors = false;
+
+        var response = await Http.PostAsJsonAsync("api/setupmfa", VerifyModel);
+        var result = await response.Content.ReadFromJsonAsync<VerifyMfaResult>();
+
+        if (result.Successful)
+        {
+            Success = result.Status;
+        }
+        else
+        {
+            Error = result.Error;
+            ShowErrors = true;
+        }
+    }
+
+
+}

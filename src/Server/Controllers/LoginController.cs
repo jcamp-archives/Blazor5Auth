@@ -10,6 +10,7 @@ using Blazor5Auth.Shared;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 
 namespace Blazor5Auth.Server.Controllers
@@ -35,19 +36,15 @@ namespace Blazor5Auth.Server.Controllers
 
             if (!result.Succeeded) return BadRequest(new LoginResult { Successful = false, Error = "Username and password are invalid." });
 
-            // without roles, this
-            //var claims = new[]
-            //{
-            //    new Claim(ClaimTypes.Name, login.Email)
-            //};
-
-            //roles
             var user = await _signInManager.UserManager.FindByEmailAsync(login.Email);
             var roles = await _signInManager.UserManager.GetRolesAsync(user);
 
             var claims = new List<Claim>();
 
             claims.Add(new Claim(ClaimTypes.Name, login.Email));
+
+            //this is needed for identity system to retrieve full user object
+            claims.Add(new Claim(ClaimTypes.NameIdentifier, user.Id));
 
             foreach (var role in roles)
             {
