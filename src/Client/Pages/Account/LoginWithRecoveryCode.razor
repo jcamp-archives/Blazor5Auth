@@ -1,0 +1,67 @@
+﻿@page "/account/loginwithrecoverycode"
+@inject IAuthService AuthService
+@inject NavigationManager NavigationManager
+
+<h1>Recovery code verification</h1>
+
+@if (ShowErrors)
+{
+    <div class="alert alert-danger" role="alert">
+        <p>@Error</p>
+    </div>
+}
+
+<p>
+    You have requested to log in with a recovery code. This login will not be remembered until you provide
+    an authenticator app code at log in or disable 2FA and log in again.
+</p>
+
+<div class="card">
+    <div class="card-body">
+        <EditForm Model="loginModel" OnValidSubmit="HandleLogin">
+            <DataAnnotationsValidator />
+            <ValidationSummary />
+            <div class="form-group">
+                <label for="email">Recovery Code</label>
+                <InputText Id="email" Class="form-control" @bind-Value="loginModel.TwoFactorCode" />
+                <ValidationMessage For="@(() => loginModel.TwoFactorCode)" />
+            </div>
+            <div class="form-check">
+                <InputCheckbox Id="remembermachine" Class="form-check-input" @bind-Value="loginModel.RememberMachine" />
+                <label class="form-check-label" for="remembermachine">Remember this machine</label>
+            </div>
+            <button type="submit" class="btn btn-primary">Submit</button>
+        </EditForm>
+    </div>
+</div>
+
+@code {
+
+    private Login2faModel loginModel = new Login2faModel();
+    private bool ShowErrors;
+    private string Error = "";
+
+    protected override async Task OnInitializedAsync()
+    {
+        var result = await AuthService.CheckMfa();
+        if (!result.Successful) NavigationManager.NavigateTo("/Account/Login");
+    }
+
+    private async Task HandleLogin()
+    {
+        ShowErrors = false;
+
+        var result = await AuthService.LoginRecoveryCode(loginModel);
+
+        if (result.Successful)
+        {
+            NavigationManager.NavigateTo("/");
+        }
+        else
+        {
+            Error = result.Error;
+            ShowErrors = true;
+        }
+    }
+
+}

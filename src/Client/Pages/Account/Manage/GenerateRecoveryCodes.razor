@@ -1,0 +1,59 @@
+﻿@page "/account/manage/GenerateRecoveryCodes"
+@inject IAuthService AuthService
+@inject NavigationManager NavigationManager
+@inject HttpClient Http
+@attribute [Authorize]
+
+<h1>Generate Recovery Codes</h1>
+
+<div class="alert alert-warning" role="alert">
+    <p>
+        <span class="glyphicon glyphicon-warning-sign"></span>
+        <strong>Put these codes in a safe place.</strong>
+    </p>
+    <p>
+        If you lose your device and don't have the recovery codes you will lose access to your account.
+    </p>
+@if (RecoveryCodes == null)
+{
+    <p>
+        Generating new recovery codes does not change the keys used in authenticator apps. If you wish to change the key
+        used in an authenticator app you should <a asp-page="./ResetAuthenticator">reset your authenticator keys.</a>
+    </p>
+}
+</div>
+@if (RecoveryCodes == null)
+{
+    <div>
+        <button @onclick="HandleGenerate" class="btn btn-danger" type="submit">Generate Recovery Codes</button>
+    </div>
+}
+@if (RecoveryCodes != null)
+{
+    <div class="row">
+        <div class="col-md-12">
+            @for (var row = 0; row < RecoveryCodes.Length; row += 2)
+            {
+                <code class="recovery-code">@RecoveryCodes[row]</code><text>&nbsp;</text><code class="recovery-code">@RecoveryCodes[row + 1]</code><br />
+            }
+        </div>
+    </div>
+}
+
+@code {
+
+    private string[] RecoveryCodes = null;
+
+    private async Task HandleGenerate()
+    {
+        var response = await Http.PostAsJsonAsync("api/setupmfa/generatecodes", new { });
+        var result = await response.Content.ReadFromJsonAsync<RecoveryCodesResult>();
+
+        if (!result.Successful)
+        {
+            NavigationManager.NavigateTo("/Account/Manage/TwoFactorAuthentication");
+        }
+        RecoveryCodes = result.RecoveryCodes;
+    }
+
+}

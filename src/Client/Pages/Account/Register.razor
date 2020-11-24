@@ -1,4 +1,4 @@
-﻿@page "/register"
+﻿@page "/account/register"
 @inject IAuthService AuthService
 @inject NavigationManager NavigationManager
 
@@ -55,7 +55,7 @@
 
         if (result.Successful)
         {
-            NavigationManager.NavigateTo("/login");
+            NavigationManager.NavigateTo("/account/login");
         }
         else
         {

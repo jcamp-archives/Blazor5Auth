@@ -1,0 +1,69 @@
+﻿@page "/account/loginwith2fa"
+@inject IAuthService AuthService
+@inject NavigationManager NavigationManager
+
+<h1>Two-factor authentication</h1>
+
+@if (ShowErrors)
+{
+    <div class="alert alert-danger" role="alert">
+        <p>@Error</p>
+    </div>
+}
+
+<p>Your login is protected with an authenticator app. Enter your authenticator code below.</p>
+
+<div class="card">
+    <div class="card-body">
+        <h5 class="card-title">Please enter your details</h5>
+        <EditForm Model="loginModel" OnValidSubmit="HandleLogin">
+            <DataAnnotationsValidator />
+            <ValidationSummary />
+            <div class="form-group">
+                <label for="email">Verification Code</label>
+                <InputText Id="email" Class="form-control" @bind-Value="loginModel.TwoFactorCode" />
+                <ValidationMessage For="@(() => loginModel.TwoFactorCode)" />
+            </div>
+            <div class="form-check">
+                <InputCheckbox Id="remembermachine" Class="form-check-input" @bind-Value="loginModel.RememberMachine" />
+                <label class="form-check-label" for="remembermachine">Remember this machine</label>
+            </div>
+            <button type="submit" class="btn btn-primary">Submit</button>
+        </EditForm>
+    </div>
+</div>
+<p>
+    Don't have access to your authenticator device? You can
+    <a id="recovery-code-login" href="/Account/LoginWithRecoveryCode">log in with a recovery code</a>.
+</p>
+
+@code {
+
+    private Login2faModel loginModel = new Login2faModel();
+    private bool ShowErrors;
+    private string Error = "";
+
+    protected override async Task OnInitializedAsync()
+    {
+        var result = await AuthService.CheckMfa();
+        if (!result.Successful) NavigationManager.NavigateTo("/Account/Login");
+    }
+
+    private async Task HandleLogin()
+    {
+        ShowErrors = false;
+
+        var result = await AuthService.Login2fa(loginModel);
+
+        if (result.Successful)
+        {
+            NavigationManager.NavigateTo("/");
+        }
+        else
+        {
+            Error = result.Error;
+            ShowErrors = true;
+        }
+    }
+
+}

@@ -30,14 +30,14 @@ namespace Blazor5Auth.Client.Services
 
         public async Task<RegisterResult> Register(RegisterModel registerModel)
         {
-            var response = await _httpClient.PostAsJsonAsync("accounts", registerModel);
+            var response = await _httpClient.PostAsJsonAsync("api/account", registerModel);
 
             return await response.Content.ReadFromJsonAsync<RegisterResult>();
         }
 
         public async Task<LoginResult> Login(LoginModel loginModel)
         {
-            var response = await _httpClient.PostAsJsonAsync("login", loginModel);
+            var response = await _httpClient.PostAsJsonAsync("api/login", loginModel);
             var loginResult = await response.Content.ReadFromJsonAsync<LoginResult>();
 
             if (!response.IsSuccessStatusCode)
@@ -49,6 +49,47 @@ namespace Blazor5Auth.Client.Services
             ((ApiAuthenticationStateProvider)_authenticationStateProvider).MarkUserAsAuthenticated(loginResult.Token);
             _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("bearer", loginResult.Token);
 
+            return loginResult;
+        }
+
+        public async Task<LoginResult> Login2fa(Login2faModel loginModel)
+        {
+            var response = await _httpClient.PostAsJsonAsync("api/login/login2fa", loginModel);
+            var loginResult = await response.Content.ReadFromJsonAsync<LoginResult>();
+
+            if (!response.IsSuccessStatusCode)
+            {
+                return loginResult;
+            }
+
+            await _localStorage.SetItemAsync("authToken", loginResult.Token);
+            ((ApiAuthenticationStateProvider)_authenticationStateProvider).MarkUserAsAuthenticated(loginResult.Token);
+            _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("bearer", loginResult.Token);
+
+            return loginResult;
+        }
+
+        public async Task<LoginResult> LoginRecoveryCode(Login2faModel loginModel)
+        {
+            var response = await _httpClient.PostAsJsonAsync("api/login/loginrecovery", loginModel);
+            var loginResult = await response.Content.ReadFromJsonAsync<LoginResult>();
+
+            if (!response.IsSuccessStatusCode)
+            {
+                return loginResult;
+            }
+
+            await _localStorage.SetItemAsync("authToken", loginResult.Token);
+            ((ApiAuthenticationStateProvider)_authenticationStateProvider).MarkUserAsAuthenticated(loginResult.Token);
+            _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("bearer", loginResult.Token);
+
+            return loginResult;
+        }
+
+        public async Task<LoginResult> CheckMfa()
+        {
+            var response = await _httpClient.PostAsJsonAsync("api/login/checkmfa", new { });
+            var loginResult = await response.Content.ReadFromJsonAsync<LoginResult>();
             return loginResult;
         }
 

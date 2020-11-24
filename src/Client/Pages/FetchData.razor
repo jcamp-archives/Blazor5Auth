@@ -1,5 +1,5 @@
 ﻿@page "/fetchdata"
-@attribute [Authorize(Policy = Policies.IsAdmin)]
+@attribute [Authorize(Policy = Policies.IsUser)]
 
 @inject HttpClient Http
 
@@ -41,7 +41,7 @@ else
 
     protected override async Task OnInitializedAsync()
     {
-        forecasts = await Http.GetFromJsonAsync<WeatherForecast[]>("WeatherForecast");
+        forecasts = await Http.GetFromJsonAsync<WeatherForecast[]>("api/WeatherForecast");
     }
 
 }

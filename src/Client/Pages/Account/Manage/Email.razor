@@ -1,0 +1,53 @@
+﻿@page "/account/manage/email"
+@inject HttpClient Http
+@attribute [Authorize]
+
+<h4>Manage Email</h4>
+
+<div class="row">
+    <div class="col-md-6">
+        <EditForm Model="Model">
+            <DataAnnotationsValidator />
+            <ValidationSummary />
+
+            <div class="form-group">
+                <label for="Email">Email</label>
+                @if (IsEmailConfirmed)
+                {
+                    <div class="input-group">
+                        <InputText Id="email" class="form-control" @bind-Value="EmailAddress" disabled/>
+                        <div class="input-group-append">
+                            <span class="input-group-text text-success font-weight-bold">✓</span>
+                        </div>
+                    </div>
+                }
+                else
+                {
+                    <InputText Id="email" class="form-control" @bind-Value="EmailAddress" disabled/>
+                    <button id="email-verification" type="submit" asp-page-handler="SendVerificationEmail" class="btn btn-link">Send verification email</button>
+                }
+            </div>
+            
+            <div class="form-group">
+                <label for="newemail">New Email</label>
+                <InputText Id="newemail" class="form-control" @bind-Value="Model.NewEmail"/>
+                <ValidationMessage For="@(() => Model.NewEmail)"/>
+            </div>
+            <button type="submit" class="btn btn-primary">Change email</button>
+        </EditForm>
+    </div>
+</div>
+
+@code
+{
+    public ChangeEmailModel Model = new ChangeEmailModel();
+    public string EmailAddress { get; set; }
+    public bool IsEmailConfirmed { get; set; }
+    
+    protected override async Task OnInitializedAsync()
+    {
+        var result = await Http.GetFromJsonAsync<UserProfileModel>("api/account/userprofile");
+        EmailAddress = result.Email;
+    }
+    
+}

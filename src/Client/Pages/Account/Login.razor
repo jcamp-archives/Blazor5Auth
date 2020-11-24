@@ -1,4 +1,4 @@
-﻿@page "/login"
+﻿@page "/account/login"
 @inject IAuthService AuthService
 @inject NavigationManager NavigationManager
 
@@ -48,6 +48,10 @@
         if (result.Successful)
         {
             NavigationManager.NavigateTo("/");
+        }
+        else if (result.RequiresTwoFactor)
+        {
+            NavigationManager.NavigateTo("/Account/LoginWith2fa");
         }
         else
         {

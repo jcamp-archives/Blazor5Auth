@@ -9,9 +9,9 @@ using System.Threading.Tasks;
 
 namespace Blazor5Auth.Server.Controllers
 {
-    [Authorize(Policy = Policies.IsAdmin)]
+    [Authorize(Policy = Policies.IsUser)]
     [ApiController]
-    [Route("[controller]")]
+    [Route("api/[controller]")]
     public class WeatherForecastController : ControllerBase
     {
         private static readonly string[] Summaries = new[]

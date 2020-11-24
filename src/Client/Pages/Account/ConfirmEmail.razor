@@ -1,0 +1,36 @@
+﻿@page "/account/confirmemail"
+@inject NavigationManager NavigationManager
+@inject HttpClient Http
+
+<h1>Confirm Email</h1>
+
+@if (!string.IsNullOrEmpty(Success))
+{
+    <div class="alert alert-success alert-dismissible" role="alert">
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        @Success
+    </div>
+}
+
+@code
+{
+    private string Success = "";
+
+    protected override async Task OnInitializedAsync()
+    {
+        NavigationManager.TryGetQueryString<string>("userId", out var userId);
+        NavigationManager.TryGetQueryString<string>("code", out var code);
+        if (userId == null || code == null)
+        {
+            NavigationManager.NavigateTo("/");
+        }
+        
+        var response = await Http.PostAsJsonAsync("api/account/confirmemail", new { });
+        var result = await response.Content.ReadFromJsonAsync<VerifyMfaResult>();
+
+        if (result.Successful)
+        {
+            Success = result.Status;
+        }
+    }
+}
