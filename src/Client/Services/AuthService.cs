@@ -29,11 +29,11 @@ namespace Blazor5Auth.Client.Services
             _localStorage = localStorage;
         }
 
-        public async Task<RegisterResult> Register(RegisterModel registerModel)
+        public async Task<Register.Result> Register(Register.Command registerModel)
         {
-            var response = await _httpClient.PostAsJsonAsync("api/account", registerModel);
+            var response = await _httpClient.PostAsJsonAsync("api/account/register", registerModel);
 
-            return await response.Content.ReadFromJsonAsync<RegisterResult>();
+            return await response.Content.ReadFromJsonAsync<Register.Result>();
         }
 
         public async Task<LoginPassword.Result> Login(LoginPassword.Command loginModel)

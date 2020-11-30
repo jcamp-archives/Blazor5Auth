@@ -25,5 +25,11 @@
     <ProjectReference Include="..\Shared\Blazor5Auth.Shared.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Compile Remove="Controllers\AccountController.cs" />
+    <Compile Remove="Controllers\LoginController.cs" />
+    <Compile Remove="Controllers\SetupMfaController.cs" />
+  </ItemGroup>
+
 
 </Project>

@@ -1,4 +1,5 @@
 ﻿@page "/account/manage/email"
+@using Features.Account.Manage
 @inject HttpClient Http
 @attribute [Authorize]
 
@@ -27,7 +28,7 @@
                     <button id="email-verification" type="submit" asp-page-handler="SendVerificationEmail" class="btn btn-link">Send verification email</button>
                 }
             </div>
-            
+
             <div class="form-group">
                 <label for="newemail">New Email</label>
                 <InputText Id="newemail" class="form-control" @bind-Value="Model.NewEmail"/>
@@ -40,14 +41,14 @@
 
 @code
 {
-    public ChangeEmailModel Model = new ChangeEmailModel();
-    public string EmailAddress { get; set; }
-    public bool IsEmailConfirmed { get; set; }
-    
+    private ChangeEmail.Command Model = new();
+    private string EmailAddress { get; set; }
+    private bool IsEmailConfirmed { get; set; }
+
     protected override async Task OnInitializedAsync()
     {
-        var result = await Http.GetFromJsonAsync<UserProfileModel>("api/account/userprofile");
+        var result = await Http.GetFromJsonAsync<UserProfile.Command>("api/account/manage/userprofile");
         EmailAddress = result.Email;
     }
-    
+
 }

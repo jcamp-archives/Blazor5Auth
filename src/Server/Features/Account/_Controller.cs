@@ -8,7 +8,7 @@ namespace Features.Account
     public class AccountController : MediatrControllerBase
     {
         public AccountController(ISender sender) : base(sender) { }
-        
+
         [HttpPost]
         public async Task<IActionResult> Login(LoginPassword.Command model) => await Send(model);
 
@@ -23,4 +23,7 @@ namespace Features.Account
 
         [HttpPost]
         public async Task<IActionResult> Register(Register.Command model) => await Send(model);
-    }}
+    }
+
+}
+

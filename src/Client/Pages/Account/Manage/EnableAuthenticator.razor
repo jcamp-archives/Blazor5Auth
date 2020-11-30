@@ -1,4 +1,6 @@
 ﻿@page "/account/manage/enableauthenticator"
+@using Features.Account.Manage
+@using Features.Base
 @inject IAuthService AuthService
 @inject NavigationManager NavigationManager
 @inject HttpClient Http
@@ -46,12 +48,13 @@
                 <div class="row">
                     <div class="col-md-6">
                         <EditForm Model="VerifyModel" OnValidSubmit="HandleVerify">
-                            <DataAnnotationsValidator />
+                            <FluentValidationValidator />
+                            <ServerValidator @ref="serverValidator" />
                             <ValidationSummary />
                             <div class="form-group">
                                 <label for="verify">Verification Code</label>
-                                <InputText Id="verify" class="form-control" @bind-Value="VerifyModel.Verification" />
-                                <ValidationMessage For="@(() => VerifyModel.Verification)" />
+                                <InputText Id="verify" class="form-control" @bind-Value="VerifyModel.VerificationCode" />
+                                <ValidationMessage For="@(() => VerifyModel.VerificationCode)" />
                             </div>
                             <button type="submit" class="btn btn-primary">Verify</button>
                         </EditForm>
@@ -63,33 +66,33 @@
 }
 
 @code {
-
-    private VerifyMfaModel VerifyModel = new VerifyMfaModel();
-    private SetupMfaModel Model;
+    private ServerValidator serverValidator;
+    private MfaEnable.Command VerifyModel = new();
+    private MfaEnable.QueryResult Model;
     private bool ShowErrors;
     private string Error = "";
     private string Success = "";
 
     protected override async Task OnInitializedAsync()
     {
-        Model = await Http.GetFromJsonAsync<SetupMfaModel>("api/setupmfa");
+        Model = await Http.GetFromJsonAsync<MfaEnable.QueryResult>("api/account/manage/mfaenable");
+
     }
 
     private async Task HandleVerify()
     {
         ShowErrors = false;
 
-        var response = await Http.PostAsJsonAsync("api/setupmfa", VerifyModel);
-        var result = await response.Content.ReadFromJsonAsync<VerifyMfaResult>();
+        var response = await Http.PostAsJsonAsync("api/account/manage/mfaenable", VerifyModel);
+        var result = await response.Content.ReadFromJsonAsync<BaseResult>();
 
-        if (result.Successful)
+        if (result.IsSuccessful)
         {
-            Success = result.Status;
+            Success = result.Message;
         }
         else
         {
-            Error = result.Error;
-            ShowErrors = true;
+            serverValidator.DisplayErrors(result.Errors);
         }
     }
 

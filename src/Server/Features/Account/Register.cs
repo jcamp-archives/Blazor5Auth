@@ -9,7 +9,7 @@ using Microsoft.AspNetCore.Identity;
 namespace Features.Account
 {
     //this allows us to avoid Create. in front of results, commands, etc
-    public class Register_ : LoginPassword
+    public class Register_ : Register
     {
         public class CommandHandler : ICommandHandler
         {
@@ -22,7 +22,7 @@ namespace Features.Account
                 _jwtHelper = jwtHelper;
                 _signInManager = signInManager;
             }
-            
+
             public async Task<Result> Handle(Command request, CancellationToken cancellationToken)
             {
                 var newUser = new ApplicationUser { UserName = request.Email, Email = request.Email };

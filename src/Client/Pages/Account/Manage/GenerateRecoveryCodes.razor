@@ -1,4 +1,5 @@
 ﻿@page "/account/manage/GenerateRecoveryCodes"
+@using Features.Account.Manage
 @inject IAuthService AuthService
 @inject NavigationManager NavigationManager
 @inject HttpClient Http
@@ -46,10 +47,10 @@
 
     private async Task HandleGenerate()
     {
-        var response = await Http.PostAsJsonAsync("api/setupmfa/generatecodes", new { });
-        var result = await response.Content.ReadFromJsonAsync<RecoveryCodesResult>();
+        var response = await Http.PostAsJsonAsync("api/account/manage/mfageneratecodes", new { });
+        var result = await response.Content.ReadFromJsonAsync<MfaGenerateCodes.Result>();
 
-        if (!result.Successful)
+        if (!result.IsSuccessful)
         {
             NavigationManager.NavigateTo("/Account/Manage/TwoFactorAuthentication");
         }

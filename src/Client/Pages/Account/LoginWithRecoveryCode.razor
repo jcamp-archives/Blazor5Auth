@@ -20,7 +20,7 @@
 <div class="card">
     <div class="card-body">
         <EditForm Model="loginModel" OnValidSubmit="HandleLogin">
-            <DataAnnotationsValidator />
+            <FluentValidationValidator />
             <ValidationSummary />
             <div class="form-group">
                 <label for="email">Recovery Code</label>

@@ -14,6 +14,6 @@ namespace Blazor5Auth.Client.Services
         Task<LoginMultiFactor.Result> LoginMfa(LoginMultiFactor.Command loginModel);
         Task<LoginRecoveryCode.Result> LoginRecoveryCode(LoginRecoveryCode.Command loginModel);
         Task Logout();
-        Task<RegisterResult> Register(RegisterModel registerModel);
+        Task<Register.Result> Register(Register.Command registerModel);
     }
 }

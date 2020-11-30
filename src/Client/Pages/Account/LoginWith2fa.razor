@@ -18,7 +18,7 @@
     <div class="card-body">
         <h5 class="card-title">Please enter your details</h5>
         <EditForm Model="loginModel" OnValidSubmit="HandleLogin">
-            <DataAnnotationsValidator />
+            <FluentValidationValidator />
             <ValidationSummary />
             <div class="form-group">
                 <label for="email">Verification Code</label>
