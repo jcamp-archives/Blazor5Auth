@@ -1,4 +1,5 @@
 ﻿@page "/account/manage/"
+@using Features.Account.Manage
 @inject HttpClient Http
 @attribute [Authorize]
 
@@ -33,22 +34,22 @@
 
 @code
 {
-    private UserProfileModel Model = new UserProfileModel();
+    private UserProfile.Command Model = new();
     private string Success { get; set; }
 
     protected override async Task OnInitializedAsync()
     {
-        Model = await Http.GetFromJsonAsync<UserProfileModel>("api/account/userprofile");
+        Model = await Http.GetFromJsonAsync<UserProfile.Command>("api/account/manage/userprofile");
     }
 
     private async Task HandleProfile()
     {
-        var response = await Http.PostAsJsonAsync("api/account/userprofile", Model);
-        var result = await response.Content.ReadFromJsonAsync<VerifyMfaResult>();
+        var response = await Http.PostAsJsonAsync("api/account/manage/userprofile", Model);
+        var result = await response.Content.ReadFromJsonAsync<UserProfile.Result>();
 
-        if (result.Successful)
+        if (result.IsSuccessful)
         {
-            Success = result.Status;
+            Success = result.Message;
         }
     }
     

@@ -1,4 +1,5 @@
 ﻿@page "/account/loginwithrecoverycode"
+@using Features.Account
 @inject IAuthService AuthService
 @inject NavigationManager NavigationManager
 
@@ -23,12 +24,8 @@
             <ValidationSummary />
             <div class="form-group">
                 <label for="email">Recovery Code</label>
-                <InputText Id="email" Class="form-control" @bind-Value="loginModel.TwoFactorCode" />
-                <ValidationMessage For="@(() => loginModel.TwoFactorCode)" />
-            </div>
-            <div class="form-check">
-                <InputCheckbox Id="remembermachine" Class="form-check-input" @bind-Value="loginModel.RememberMachine" />
-                <label class="form-check-label" for="remembermachine">Remember this machine</label>
+                <InputText Id="email" Class="form-control" @bind-Value="loginModel.RecoveryCode" />
+                <ValidationMessage For="@(() => loginModel.RecoveryCode)" />
             </div>
             <button type="submit" class="btn btn-primary">Submit</button>
         </EditForm>
@@ -37,14 +34,14 @@
 
 @code {
 
-    private Login2faModel loginModel = new Login2faModel();
+    private LoginRecoveryCode.Command loginModel = new();
     private bool ShowErrors;
     private string Error = "";
 
     protected override async Task OnInitializedAsync()
     {
         var result = await AuthService.CheckMfa();
-        if (!result.Successful) NavigationManager.NavigateTo("/Account/Login");
+        if (!result.IsSuccessful) NavigationManager.NavigateTo("/Account/Login");
     }
 
     private async Task HandleLogin()
@@ -53,13 +50,13 @@
 
         var result = await AuthService.LoginRecoveryCode(loginModel);
 
-        if (result.Successful)
+        if (result.IsSuccessful)
         {
             NavigationManager.NavigateTo("/");
         }
         else
         {
-            Error = result.Error;
+            Error = result.Message;
             ShowErrors = true;
         }
     }

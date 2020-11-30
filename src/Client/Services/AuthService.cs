@@ -9,6 +9,7 @@ using System.Text.Json;
 using System.Threading.Tasks;
 using Blazor5Auth.Shared;
 using Blazored.LocalStorage;
+using Features.Account;
 using Microsoft.AspNetCore.Components.Authorization;
 
 namespace Blazor5Auth.Client.Services
@@ -35,10 +36,10 @@ namespace Blazor5Auth.Client.Services
             return await response.Content.ReadFromJsonAsync<RegisterResult>();
         }
 
-        public async Task<LoginResult> Login(LoginModel loginModel)
+        public async Task<LoginPassword.Result> Login(LoginPassword.Command loginModel)
         {
-            var response = await _httpClient.PostAsJsonAsync("api/login", loginModel);
-            var loginResult = await response.Content.ReadFromJsonAsync<LoginResult>();
+            var response = await _httpClient.PostAsJsonAsync("api/account/login", loginModel);
+            var loginResult = await response.Content.ReadFromJsonAsync<LoginPassword.Result>();
 
             if (!response.IsSuccessStatusCode)
             {
@@ -52,10 +53,10 @@ namespace Blazor5Auth.Client.Services
             return loginResult;
         }
 
-        public async Task<LoginResult> Login2fa(Login2faModel loginModel)
+        public async Task<LoginMultiFactor.Result> LoginMfa(LoginMultiFactor.Command loginModel)
         {
-            var response = await _httpClient.PostAsJsonAsync("api/login/login2fa", loginModel);
-            var loginResult = await response.Content.ReadFromJsonAsync<LoginResult>();
+            var response = await _httpClient.PostAsJsonAsync("api/account/loginmfa", loginModel);
+            var loginResult = await response.Content.ReadFromJsonAsync<LoginMultiFactor.Result>();
 
             if (!response.IsSuccessStatusCode)
             {
@@ -69,10 +70,10 @@ namespace Blazor5Auth.Client.Services
             return loginResult;
         }
 
-        public async Task<LoginResult> LoginRecoveryCode(Login2faModel loginModel)
+        public async Task<LoginRecoveryCode.Result> LoginRecoveryCode(LoginRecoveryCode.Command loginModel)
         {
             var response = await _httpClient.PostAsJsonAsync("api/login/loginrecovery", loginModel);
-            var loginResult = await response.Content.ReadFromJsonAsync<LoginResult>();
+            var loginResult = await response.Content.ReadFromJsonAsync<LoginRecoveryCode.Result>();
 
             if (!response.IsSuccessStatusCode)
             {
@@ -86,10 +87,10 @@ namespace Blazor5Auth.Client.Services
             return loginResult;
         }
 
-        public async Task<LoginResult> CheckMfa()
+        public async Task<LoginMultiFactor.QueryResult> CheckMfa()
         {
-            var response = await _httpClient.PostAsJsonAsync("api/login/checkmfa", new { });
-            var loginResult = await response.Content.ReadFromJsonAsync<LoginResult>();
+            var response = await _httpClient.PostAsJsonAsync("api/account/checkmfa", new { });
+            var loginResult = await response.Content.ReadFromJsonAsync<LoginMultiFactor.QueryResult>();
             return loginResult;
         }
 

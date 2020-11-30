@@ -1,4 +1,5 @@
 ﻿@page "/account/loginwith2fa"
+@using Features.Account
 @inject IAuthService AuthService
 @inject NavigationManager NavigationManager
 
@@ -39,29 +40,29 @@
 
 @code {
 
-    private Login2faModel loginModel = new Login2faModel();
+    private LoginMultiFactor.Command loginModel = new();
     private bool ShowErrors;
     private string Error = "";
 
     protected override async Task OnInitializedAsync()
     {
         var result = await AuthService.CheckMfa();
-        if (!result.Successful) NavigationManager.NavigateTo("/Account/Login");
+        if (!result.IsSuccessful) NavigationManager.NavigateTo("/Account/Login");
     }
 
     private async Task HandleLogin()
     {
         ShowErrors = false;
 
-        var result = await AuthService.Login2fa(loginModel);
+        var result = await AuthService.LoginMfa(loginModel);
 
-        if (result.Successful)
+        if (result.IsSuccessful)
         {
             NavigationManager.NavigateTo("/");
         }
         else
         {
-            Error = result.Error;
+            Error = result.Message;
             ShowErrors = true;
         }
     }

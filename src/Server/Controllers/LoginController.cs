@@ -40,7 +40,7 @@ namespace Blazor5Auth.Server.Controllers
             return Ok(new LoginResult { Successful = true, RequiresTwoFactor = true });
         }
 
-        [HttpPost]
+        [HttpPost("oldlogin")]
         public async Task<IActionResult> Login([FromBody] LoginModel login)
         {
             var result = await _signInManager.PasswordSignInAsync(login.Email, login.Password, false, false);

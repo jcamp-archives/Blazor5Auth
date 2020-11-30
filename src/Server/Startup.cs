@@ -1,4 +1,5 @@
 ﻿using Blazor5Auth.Server.Data;
+using Blazor5Auth.Server.Extensions;
 using Blazor5Auth.Server.Models;
 using Blazor5Auth.Shared;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -14,6 +15,11 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
 using System.Linq;
 using System.Text;
+using Features.Account;
+using Features.Base;
+using FluentValidation.AspNetCore;
+using MediatR;
+using Microsoft.AspNetCore.Mvc;
 
 namespace Blazor5Auth.Server
 {
@@ -30,6 +36,7 @@ namespace Blazor5Auth.Server
         // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddMediatR(typeof(Startup));
             services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseSqlite(Configuration.GetConnectionString("DefaultConnection")));
 
@@ -58,8 +65,34 @@ namespace Blazor5Auth.Server
                 config.AddPolicy(Policies.IsUser, Policies.IsUserPolicy());
             });
 
+            // This allows customization of the result when model binding fails on ApiControllers
+            services.AddControllersWithViews()
+                .ConfigureApiBehaviorOptions(options =>
+                {
+                    options.InvalidModelStateResponseFactory = context =>
+                    {
+                        return new BadRequestObjectResult(new BaseResult().WithErrors(context.ModelState));
+
+                        //return new BadRequestObjectResult(context.ModelState);
+                        // Default
+//                         return new BadRequestObjectResult(
+                        //                          new ValidationProblemDetails(context.ModelState));
+                    };
+                });
+
+            services.AddRazorPages()
+                .AddFluentValidation(fv =>
+                {
+                    fv.ImplicitlyValidateChildProperties = true;
+                    fv.RegisterValidatorsFromAssemblyContaining<BaseResult>();
+                    fv.RegisterValidatorsFromAssemblyContaining<Startup>();
+                });
+
             services.AddControllersWithViews();
             services.AddRazorPages();
+
+            services.AddTransient<IJwtHelper, JwtHelper>();
+            services.AddScoped<IUserAccessor, UserAccessor>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

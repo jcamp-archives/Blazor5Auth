@@ -1,4 +1,5 @@
 ﻿@page "/account/login"
+@using Features.Account
 @inject IAuthService AuthService
 @inject NavigationManager NavigationManager
 
@@ -15,7 +16,7 @@
     <div class="card-body">
         <h5 class="card-title">Please enter your details</h5>
         <EditForm Model="loginModel" OnValidSubmit="HandleLogin">
-            <DataAnnotationsValidator />
+            <FluentValidationValidator />
             <ValidationSummary />
 
             <div class="form-group">
@@ -35,7 +36,7 @@
 
 @code {
 
-    private LoginModel loginModel = new LoginModel();
+    private LoginPassword.Command loginModel = new LoginPassword.Command();
     private bool ShowErrors;
     private string Error = "";
 
@@ -45,7 +46,7 @@
 
         var result = await AuthService.Login(loginModel);
 
-        if (result.Successful)
+        if (result.IsSuccessful)
         {
             NavigationManager.NavigateTo("/");
         }
@@ -55,7 +56,7 @@
         }
         else
         {
-            Error = result.Error;
+            Error = result.Message;
             ShowErrors = true;
         }
     }
