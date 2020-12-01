@@ -15,13 +15,13 @@ namespace Features.Account.Manage
         {
             private readonly UserManager<ApplicationUser> _userManager;
             private readonly ClaimsPrincipal _user;
-            
+
             public QueryHandler(UserManager<ApplicationUser> userManager, IUserAccessor user)
             {
                 _userManager = userManager;
                 _user = user.User;
             }
-            
+
             public async Task<Command> Handle(Query request, CancellationToken cancellationToken)
             {
                 var user = await _userManager.GetUserAsync(_user);
@@ -29,31 +29,31 @@ namespace Features.Account.Manage
                 return model;
             }
         }
-        
+
         public class CommandHandler : ICommandHandler
         {
             private readonly UserManager<ApplicationUser> _userManager;
             private readonly ClaimsPrincipal _user;
-            
+
             public CommandHandler(UserManager<ApplicationUser> userManager, IUserAccessor user)
             {
                 _userManager = userManager;
                 _user = user.User;
             }
-            
+
             public async Task<Result> Handle(Command request, CancellationToken cancellationToken)
             {
                 var user = await _userManager.GetUserAsync(_user);
-                var statusMessage = ""; 
+                var statusMessage = "";
                 var phoneNumber = await _userManager.GetPhoneNumberAsync(user);
-                
+
                 if (request.PhoneNumber != phoneNumber)
                 {
                     var setPhoneResult = await _userManager.SetPhoneNumberAsync(user, request.PhoneNumber);
                     statusMessage = setPhoneResult.Succeeded ? "Your profile has been updated" : "Unexpected error when trying to set phone number.";
                 }
-                
-                return new Result().Success(statusMessage);
+
+                return new Result().Succeeded(statusMessage);
             }
         }
     }

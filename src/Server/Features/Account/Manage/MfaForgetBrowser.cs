@@ -23,7 +23,7 @@ namespace Features.Account.Manage
             {
                 await _signInManager.ForgetTwoFactorClientAsync();
 
-                return new Result().Success(
+                return new Result().Succeeded(
                     "The current browser has been forgotten. When you login again from this browser you will be prompted for your Mfa code.");
             }
         }

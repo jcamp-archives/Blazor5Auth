@@ -45,7 +45,7 @@ namespace Features.Account
                     await _signInManager.UserManager.AddToRoleAsync(newUser, "Admin");
                 }
 
-                return new Result().Success();
+                return new Result().Succeeded();
             }
         }
     }

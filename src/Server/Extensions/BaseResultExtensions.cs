@@ -7,7 +7,7 @@ namespace Blazor5Auth.Server.Extensions
 {
     public static class BaseResultExtensions
     {
-        public static T Success<T>(this T result, string message = null) where T : BaseResult
+        public static T Succeeded<T>(this T result, string message = null) where T : BaseResult
         {
             result.IsSuccessful = true;
             if (message != null)
@@ -16,7 +16,7 @@ namespace Blazor5Auth.Server.Extensions
             }
             return result;
         }
-        
+
         public static T Failed<T>(this T result, string message = null) where T : BaseResult
         {
             result.IsSuccessful = false;
@@ -40,6 +40,6 @@ namespace Blazor5Auth.Server.Extensions
             result.Errors.Add(new KeyValuePair<string, string[]>("", errors.ToArray()));
             return result;
         }
-        
+
     }
 }

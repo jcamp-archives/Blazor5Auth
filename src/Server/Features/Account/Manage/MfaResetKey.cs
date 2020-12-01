@@ -30,7 +30,7 @@ namespace Features.Account.Manage
                 await _userManager.ResetAuthenticatorKeyAsync(user);
                 await _signInManager.RefreshSignInAsync(user);
 
-                return new Result().Success(
+                return new Result().Succeeded(
                     "Your authenticator app key has been reset, you will need to configure your authenticator app using the new key.");
             }
         }

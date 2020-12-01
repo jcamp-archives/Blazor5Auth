@@ -17,17 +17,17 @@ namespace Features.Account
             {
                 _signInManager = signInManager;
             }
-            
+
             public async Task<QueryResult> Handle(Query request, CancellationToken cancellationToken)
             {
                 var user = await _signInManager.GetTwoFactorAuthenticationUserAsync();
 
                 if (user == null) return new QueryResult().Failed();
 
-                return new QueryResult().Success();
+                return new QueryResult().Succeeded();
             }
         }
-        
+
         public class CommandHandler : ICommandHandler
         {
             private readonly IJwtHelper _jwtHelper;
@@ -39,7 +39,7 @@ namespace Features.Account
                 _jwtHelper = jwtHelper;
                 _signInManager = signInManager;
             }
-            
+
             public async Task<Result> Handle(Command request, CancellationToken cancellationToken)
             {
                 var user = await _signInManager.GetTwoFactorAuthenticationUserAsync();
@@ -54,7 +54,7 @@ namespace Features.Account
                 var roles = await _signInManager.UserManager.GetRolesAsync(user);
 
                 var token = _jwtHelper.GenerateJwt(user, roles);
-                
+
                 return new Result {IsSuccessful = true, Token = token};
             }
         }

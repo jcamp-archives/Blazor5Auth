@@ -44,7 +44,7 @@ namespace Features.Account.Manage
 
             private async Task<QueryResult> LoadSharedKeyAndQrCodeUriAsync(ApplicationUser user)
             {
-                var result = new QueryResult().Success();
+                var result = new QueryResult().Succeeded();
 
                 // Load the authenticator key & QR code URI to display on the form
                 var unformattedKey = await _userManager.GetAuthenticatorKeyAsync(user);
@@ -128,7 +128,7 @@ namespace Features.Account.Manage
                 }
 
                 await _userManager.SetTwoFactorEnabledAsync(user, true);
-                return new Result().Success("Your authenticator app has been verified.");
+                return new Result().Succeeded("Your authenticator app has been verified.");
             }
         }
     }

@@ -34,7 +34,7 @@ namespace Features.Account.Manage
                         $"Unexpected error occurred disabling 2FA for user with ID '{_userManager.GetUserId(_user)}'.");
                 }
 
-                return new Result().Success(
+                return new Result().Succeeded(
                     "Mfa has been disabled. You can reenable 2fa when you setup an authenticator app");
             }
         }

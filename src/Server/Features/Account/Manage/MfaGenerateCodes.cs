@@ -34,7 +34,7 @@ namespace Features.Account.Manage
                         $"Cannot generate recovery codes for user with ID '{userId}' as they do not have 2FA enabled.");
                 }
 
-                var result = new Result().Success("You have generated new recovery codes.");
+                var result = new Result().Succeeded("You have generated new recovery codes.");
 
                 result.RecoveryCodes = (await _userManager.GenerateNewTwoFactorRecoveryCodesAsync(user, 10)).ToArray();
 
