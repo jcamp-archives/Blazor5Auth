@@ -8,9 +8,9 @@
       "name": "Launch and Debug Standalone Blazor WebAssembly App",
       "type": "blazorwasm",
       "request": "launch",
-      "cwd": "${workspaceFolder}/src/Server",
+      "cwd": "${workspaceFolder}/Server",
       "hosted": true,
-      "program": "${workspaceFolder}/src/Server/bin/Debug/net5.0/Blazor5Auth.Server.dll"
+      "program": "${workspaceFolder}/Server/bin/Debug/net5.0/BlazorIdentityServer.Server.dll"
     }
   ]
 }

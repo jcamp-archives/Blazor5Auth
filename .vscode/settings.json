@@ -1,3 +1,6 @@
 {
-    "omnisharp.defaultLaunchSolution": "Blazor5Auth.sln"
+    "files.exclude": {
+      "src/": true,
+      "identityserver/": true
+    }
 }
