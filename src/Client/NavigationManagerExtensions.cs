@@ -1,18 +1,20 @@
-﻿using Microsoft.AspNetCore.Components;
-using Microsoft.AspNetCore.WebUtilities;
+﻿using System.Web;
+using Microsoft.AspNetCore.Components;
 
 namespace Blazor5Auth.Client
 {
-    
+
     // https://chrissainty.com/working-with-query-strings-in-blazor/
-    
+    // ParseQueryString added to HttpUtility
+
     public static class NavigationManagerExtensions
     {
         public static bool TryGetQueryString<T>(this NavigationManager navManager, string key, out T value)
         {
             var uri = navManager.ToAbsoluteUri(navManager.Uri);
+            var valueFromQueryString = HttpUtility.ParseQueryString(uri.Query)[key];
 
-            if (QueryHelpers.ParseQuery(uri.Query).TryGetValue(key, out var valueFromQueryString))
+            if (!string.IsNullOrEmpty(valueFromQueryString))
             {
                 if (typeof(T) == typeof(int) && int.TryParse(valueFromQueryString, out var valueAsInt))
                 {
@@ -36,6 +38,7 @@ namespace Blazor5Auth.Client
             value = default;
             return false;
         }
-        
+
     }
+
 }
