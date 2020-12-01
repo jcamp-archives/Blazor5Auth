@@ -20,9 +20,4 @@
     <ProjectReference Include="..\Shared\Blazor5Auth.Shared.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Pages\Account\" />
-    <Folder Include="Pages\Account\Manage\" />
-  </ItemGroup>
-
 </Project>
