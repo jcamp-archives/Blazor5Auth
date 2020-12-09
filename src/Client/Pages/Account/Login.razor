@@ -48,11 +48,11 @@
 
         if (result.IsSuccessful)
         {
-            NavigationManager.NavigateTo("/");
+            NavigationManager.NavigateToReturnUrl("/");
         }
         else if (result.RequiresTwoFactor)
         {
-            NavigationManager.NavigateTo("/Account/LoginWith2fa");
+            NavigationManager.NavigateWithExistingReturnUrl("/Account/LoginWith2fa");
         }
         else
         {

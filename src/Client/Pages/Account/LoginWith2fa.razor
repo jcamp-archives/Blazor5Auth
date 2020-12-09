@@ -35,7 +35,7 @@
 </div>
 <p>
     Don't have access to your authenticator device? You can
-    <a id="recovery-code-login" href="/Account/LoginWithRecoveryCode">log in with a recovery code</a>.
+    <a href="#" @onclick="GoToRecovery" @onclick:preventDefault>log in with a recovery code</a>.
 </p>
 
 @code {
@@ -47,7 +47,7 @@
     protected override async Task OnInitializedAsync()
     {
         var result = await AuthService.CheckMfa();
-        if (!result.IsSuccessful) NavigationManager.NavigateTo("/Account/Login");
+        if (!result.IsSuccessful) NavigationManager.NavigateWithExistingReturnUrl("/Account/Login");
     }
 
     private async Task HandleLogin()
@@ -58,13 +58,17 @@
 
         if (result.IsSuccessful)
         {
-            NavigationManager.NavigateTo("/");
+            NavigationManager.NavigateToReturnUrl("/");
         }
         else
         {
             Error = result.Message;
             ShowErrors = true;
         }
+    }
+
+    private void GoToRecovery() {
+        NavigationManager.NavigateWithExistingReturnUrl("/Account/LoginWithRecoveryCode");
     }
 
 }

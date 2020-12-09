@@ -41,7 +41,7 @@
     protected override async Task OnInitializedAsync()
     {
         var result = await AuthService.CheckMfa();
-        if (!result.IsSuccessful) NavigationManager.NavigateTo("/Account/Login");
+        if (!result.IsSuccessful) NavigationManager.NavigateWithExistingReturnUrl("/Account/Login");
     }
 
     private async Task HandleLogin()
@@ -52,7 +52,7 @@
 
         if (result.IsSuccessful)
         {
-            NavigationManager.NavigateTo("/");
+            NavigationManager.NavigateToReturnUrl("/");
         }
         else
         {
