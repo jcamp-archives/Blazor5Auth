@@ -16,6 +16,7 @@ namespace Features.Account
             public string Email { get; set; }
             public string Password { get; set; }
             public string ConfirmPassword { get; set; }
+            public string ReturnUrl { get; set; }
         }
 
         public class CommandValidator : AbstractValidator<Command>
@@ -28,7 +29,9 @@ namespace Features.Account
             }
         }
 
-        public class Result : BaseResult { }
+        public class Result : BaseResult {
+            public bool RequiresEmailConfirmation { get; set; }
+        }
 
         //this is here for easy navigation with goto implementation
         public interface ICommandHandler : IRequestHandler<Command, Result> { }

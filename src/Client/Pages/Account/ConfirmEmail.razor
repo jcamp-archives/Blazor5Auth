@@ -26,7 +26,7 @@
             NavigationManager.NavigateTo("/");
         }
 
-        var response = await Http.PostAsJsonAsync("api/account/confirmemail", new { });
+        var response = await Http.PostAsJsonAsync("api/account/confirmemail", new Features.Account.ConfirmEmail.Command { UserId = userId, Code = code });
         var result = await response.Content.ReadFromJsonAsync<BaseResult>();
 
         if (result.IsSuccessful)

@@ -20,12 +20,21 @@ namespace Features.Account
                 _jwtHelper = jwtHelper;
                 _signInManager = signInManager;
             }
-            
+
             public async Task<Result> Handle(Command request, CancellationToken cancellationToken)
             {
                 var result = await _signInManager.PasswordSignInAsync(request.Email, request.Password, false, false);
 
                 if (result.RequiresTwoFactor) return new Result {IsSuccessful = false, RequiresTwoFactor = true};
+
+                if (result.IsNotAllowed) {
+                    var user2 = await _signInManager.UserManager.FindByEmailAsync(request.Email);
+                    if (!(await _signInManager.UserManager.IsEmailConfirmedAsync(user2)))
+                    {
+                        return new Result {IsSuccessful = false, RequiresEmailConfirmation = true};
+                    }
+                }
+
                 if (!result.Succeeded) return new Result().Failed("Username and password are invalid.");
 
                 var user = await _signInManager.UserManager.FindByEmailAsync(request.Email);

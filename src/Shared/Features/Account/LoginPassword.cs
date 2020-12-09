@@ -31,6 +31,7 @@ namespace Features.Account
         {
             public bool RequiresTwoFactor { get; set; }
             public bool IsLockedOut { get; set; }
+            public bool RequiresEmailConfirmation { get; set; }
             public string Token { get; set; }
         }
 

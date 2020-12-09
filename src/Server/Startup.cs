@@ -20,6 +20,7 @@ using Features.Base;
 using FluentValidation.AspNetCore;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using Blazor5Auth.Server.Services;
 
 namespace Blazor5Auth.Server
 {
@@ -40,7 +41,7 @@ namespace Blazor5Auth.Server
             services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseSqlite(Configuration.GetConnectionString("DefaultConnection")));
 
-            services.AddDefaultIdentity<ApplicationUser>()
+            services.AddDefaultIdentity<ApplicationUser>(options => options.SignIn.RequireConfirmedAccount = true)
                 .AddRoles<IdentityRole>()
                 .AddEntityFrameworkStores<ApplicationDbContext>();
 
@@ -91,8 +92,15 @@ namespace Blazor5Auth.Server
             services.AddControllersWithViews();
             services.AddRazorPages();
 
+            //email services
+            services.Configure<SmtpSettings>(Configuration.GetSection("SmtpSettings"));
+            services.AddScoped<IEmailService, EmailService>();
+            services.AddScoped<IRazorViewToStringRenderer, RazorViewToStringRenderer>();
+
             services.AddTransient<IJwtHelper, JwtHelper>();
             services.AddScoped<IUserAccessor, UserAccessor>();
+
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

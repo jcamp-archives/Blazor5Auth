@@ -15,7 +15,7 @@ using Microsoft.AspNetCore.WebUtilities;
 namespace Features.Account
 {
     //this allows us to avoid Create. in front of results, commands, etc
-    public class Register_ : Register
+    public class ForgotPassword_ : ForgotPassword
     {
         public class CommandHandler : ICommandHandler
         {
@@ -35,37 +35,23 @@ namespace Features.Account
 
             public async Task<Result> Handle(Command request, CancellationToken cancellationToken)
             {
-                var newUser = new ApplicationUser { UserName = request.Email, Email = request.Email };
-
-                var result = await _signInManager.UserManager.CreateAsync(newUser, request.Password);
-
-                if (!result.Succeeded)
+                var user = await _signInManager.UserManager.FindByEmailAsync(request.Email);
+                if (user == null || !(await _signInManager.UserManager.IsEmailConfirmedAsync(user)))
                 {
-                    var errors = result.Errors.Select(x => x.Description);
-
-                    return new Result().WithErrors(errors);
+                    // Don't reveal that the user does not exist or is not confirmed
+                    return new Result().Succeeded();
                 }
 
-                // Send confirmation email
-                var code = await _signInManager.UserManager.GenerateEmailConfirmationTokenAsync(newUser);
+                var code = await _signInManager.UserManager.GenerateEmailConfirmationTokenAsync(user);
                 code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
 
                 var httpRequest = _contextAccessor.HttpContext.Request;
                 var domain = $"{httpRequest.Scheme}://{httpRequest.Host}";
 
-                var callbackUrl = $"{domain}/Account/ConfirmEmail?userId={Uri.EscapeDataString(newUser.Id)}&code={code}";
+                var callbackUrl = $"{domain}/Account/ResetPassword?code={code}";
 
-                await _emailService.SendAsync(newUser.Email, "Confirm your email",
-                    $"Please confirm your account by <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>.");
-
-                // Add all new users to the User role
-                await _signInManager.UserManager.AddToRoleAsync(newUser, "User");
-
-                // Add new users whose email starts with 'admin' to the Admin role
-                if (newUser.Email.StartsWith("admin"))
-                {
-                    await _signInManager.UserManager.AddToRoleAsync(newUser, "Admin");
-                }
+                await _emailService.SendAsync(user.Email, "Reset Password",
+                    $"Please reset your password by <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>.");
 
                 return new Result().Succeeded();
             }

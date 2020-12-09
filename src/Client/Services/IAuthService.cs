@@ -15,5 +15,6 @@ namespace Blazor5Auth.Client.Services
         Task<LoginRecoveryCode.Result> LoginRecoveryCode(LoginRecoveryCode.Command loginModel);
         Task Logout();
         Task<Register.Result> Register(Register.Command registerModel);
+        Task UpdateToken(string token);
     }
 }

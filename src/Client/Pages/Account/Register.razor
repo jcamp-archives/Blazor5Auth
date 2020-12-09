@@ -39,11 +39,13 @@
 
     private async Task HandleRegistration()
     {
+        RegisterModel.ReturnUrl = NavigationManager.ToBaseRelativePath(NavigationManager.Uri);
+
         var result = await AuthService.Register(RegisterModel);
 
         if (result.IsSuccessful)
         {
-            NavigationManager.NavigateTo("/account/login");
+            NavigationManager.NavigateTo("/account/registerconfirmation");
         }
         else
         {

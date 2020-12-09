@@ -23,6 +23,18 @@ namespace Features.Account
 
         [HttpPost]
         public async Task<IActionResult> Register(Register.Command model) => await Send(model);
+
+        [HttpPost]
+        public async Task<IActionResult> ConfirmEmailChange(ConfirmEmailChange.Command model) {
+            model.ClientAuth = false;
+            return await Send(model);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> ConfirmEmail(ConfirmEmail.Command model) => await Send(model);
+
+        [HttpPost]
+        public async Task<IActionResult> ForgotPassword(ForgotPassword.Command model) => await Send(model);
     }
 
 }

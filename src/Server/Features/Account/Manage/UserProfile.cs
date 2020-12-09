@@ -26,6 +26,7 @@ namespace Features.Account.Manage
             {
                 var user = await _userManager.GetUserAsync(_user);
                 var model = new Command {Email = user.Email, PhoneNumber = user.PhoneNumber};
+                model.IsEmailConfirmed = await _userManager.IsEmailConfirmedAsync(user);
                 return model;
             }
         }

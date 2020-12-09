@@ -38,5 +38,18 @@ namespace Features.Account.Manage
 
         [HttpPost]
         public async Task<IActionResult> MfaResetKey() => await Send(new MfaResetKey.Command());
+
+        [HttpPost]
+        public async Task<IActionResult> ChangeEmail(ChangeEmail.Command command) => await Send(command);
+
+        [HttpPost]
+        public async Task<IActionResult> SendVerificationEmail() => await Send(new SendVerificationEmail.Command());
+
+        [HttpPost]
+        public async Task<IActionResult> ConfirmEmailChange(ConfirmEmailChange.Command model) {
+            model.ClientAuth = true;
+            return await Send(model);
+        }
+
     }
 }

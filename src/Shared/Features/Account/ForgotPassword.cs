@@ -7,24 +7,24 @@ using Features.Base;
 using FluentValidation;
 using MediatR;
 
-namespace Features.Account.Manage
+namespace Features.Account
 {
-    public class ChangeEmail
+    public class ForgotPassword
     {
         public class Command : IRequest<Result>
         {
-            public string NewEmail { get; set; }
+            public string Email { get; set; }
         }
 
         public class CommandValidator : AbstractValidator<Command>
         {
             public CommandValidator()
             {
-                RuleFor(p => p.NewEmail).NotNull().NotEmpty().EmailAddress();
+                RuleFor(p => p.Email).NotEmpty().EmailAddress();
             }
         }
 
-        public class Result : BaseResult { }
+        public class Result : BaseResult {}
 
         //this is here for easy navigation with goto implementation
         public interface ICommandHandler : IRequestHandler<Command, Result> { }

@@ -9,20 +9,9 @@ using MediatR;
 
 namespace Features.Account.Manage
 {
-    public class ChangeEmail
+    public class SendVerificationEmail
     {
-        public class Command : IRequest<Result>
-        {
-            public string NewEmail { get; set; }
-        }
-
-        public class CommandValidator : AbstractValidator<Command>
-        {
-            public CommandValidator()
-            {
-                RuleFor(p => p.NewEmail).NotNull().NotEmpty().EmailAddress();
-            }
-        }
+        public class Command : IRequest<Result> { }
 
         public class Result : BaseResult { }
 

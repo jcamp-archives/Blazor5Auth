@@ -7,24 +7,28 @@ using Features.Base;
 using FluentValidation;
 using MediatR;
 
-namespace Features.Account.Manage
+namespace Features.Account
 {
-    public class ChangeEmail
+    public class ConfirmEmail
     {
         public class Command : IRequest<Result>
         {
-            public string NewEmail { get; set; }
+            public string UserId { get; set; }
+            public string Code { get; set; }
         }
 
         public class CommandValidator : AbstractValidator<Command>
         {
             public CommandValidator()
             {
-                RuleFor(p => p.NewEmail).NotNull().NotEmpty().EmailAddress();
+                RuleFor(p => p.UserId).NotEmpty();
+                RuleFor(p => p.Code).NotEmpty();
             }
         }
 
-        public class Result : BaseResult { }
+        public class Result : BaseResult {
+            public bool RequiresEmailConfirmation { get; set; }
+        }
 
         //this is here for easy navigation with goto implementation
         public interface ICommandHandler : IRequestHandler<Command, Result> { }

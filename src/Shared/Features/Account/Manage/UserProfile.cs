@@ -7,11 +7,12 @@ namespace Features.Account.Manage
     public class UserProfile
     {
         public class Query : IRequest<Command> { }
-            
+
         public class Command : IRequest<Result>
         {
             public string Email { get; set; }
             public string PhoneNumber { get; set; }
+            public bool IsEmailConfirmed { get; set; }
         }
 
         public class CommandValidator : AbstractValidator<Command>

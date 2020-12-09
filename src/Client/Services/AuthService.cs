@@ -36,6 +36,13 @@ namespace Blazor5Auth.Client.Services
             return await response.Content.ReadFromJsonAsync<Register.Result>();
         }
 
+        public async Task UpdateToken(string token)
+        {
+            await _localStorage.SetItemAsync("authToken", token);
+            ((ApiAuthenticationStateProvider)_authenticationStateProvider).MarkUserAsAuthenticated(token);
+            _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("bearer", token);
+        }
+
         public async Task<LoginPassword.Result> Login(LoginPassword.Command loginModel)
         {
             var response = await _httpClient.PostAsJsonAsync("api/account/login", loginModel);
@@ -46,9 +53,7 @@ namespace Blazor5Auth.Client.Services
                 return loginResult;
             }
 
-            await _localStorage.SetItemAsync("authToken", loginResult.Token);
-            ((ApiAuthenticationStateProvider)_authenticationStateProvider).MarkUserAsAuthenticated(loginResult.Token);
-            _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("bearer", loginResult.Token);
+            await UpdateToken(loginResult.Token);
 
             return loginResult;
         }
@@ -63,9 +68,7 @@ namespace Blazor5Auth.Client.Services
                 return loginResult;
             }
 
-            await _localStorage.SetItemAsync("authToken", loginResult.Token);
-            ((ApiAuthenticationStateProvider)_authenticationStateProvider).MarkUserAsAuthenticated(loginResult.Token);
-            _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("bearer", loginResult.Token);
+            await UpdateToken(loginResult.Token);
 
             return loginResult;
         }
@@ -80,9 +83,7 @@ namespace Blazor5Auth.Client.Services
                 return loginResult;
             }
 
-            await _localStorage.SetItemAsync("authToken", loginResult.Token);
-            ((ApiAuthenticationStateProvider)_authenticationStateProvider).MarkUserAsAuthenticated(loginResult.Token);
-            _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("bearer", loginResult.Token);
+            await UpdateToken(loginResult.Token);
 
             return loginResult;
         }

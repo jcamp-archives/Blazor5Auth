@@ -54,6 +54,14 @@
         {
             NavigationManager.NavigateWithExistingReturnUrl("/Account/LoginWith2fa");
         }
+        else if (result.RequiresEmailConfirmation)
+        {
+            NavigationManager.NavigateWithExistingReturnUrl("/Account/ResendEmailConfirmation");
+        }
+        else if (result.IsLockedOut)
+        {
+            NavigationManager.NavigateTo("/Account/Lockout");
+        }
         else
         {
             Error = result.Message;

@@ -1,3 +1,54 @@
 ﻿@page "/account/confirmemailchange"
+@using Features.Base
+@inject NavigationManager NavigationManager
+@inject AuthenticationStateProvider AuthenticationStateProvider
+@inject HttpClient Http
+@inject IAuthService AuthService
 
 <h1>Confirm Email Change</h1>
+
+@if (!string.IsNullOrEmpty(Success))
+{
+    <div class="alert alert-success alert-dismissible" role="alert">
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        @Success
+    </div>
+}
+
+@code
+{
+    private string Success = "";
+
+    protected override async Task OnInitializedAsync()
+    {
+        NavigationManager.TryGetQueryString<string>("userId", out var userId);
+        NavigationManager.TryGetQueryString<string>("code", out var code);
+        NavigationManager.TryGetQueryString<string>("email", out var email);
+        if (userId == null || code == null || email == null)
+        {
+            NavigationManager.NavigateTo("/");
+        }
+
+        var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+        var user = authState.User;
+        var url = "api/account/confirmemailchange";
+
+        if (user.Identity.IsAuthenticated) url = "api/account/manage/confirmemailchange";
+
+        var response = await Http.PostAsJsonAsync(url, new Features.Account.ConfirmEmailChange.Command { UserId = userId, Code = code, Email = email });
+        var result = await response.Content.ReadFromJsonAsync<Features.Account.ConfirmEmailChange.Result>();
+
+        if (result.IsSuccessful)
+        {
+            if (user.Identity.IsAuthenticated && !string.IsNullOrEmpty(result.Token)) {
+                await AuthService.UpdateToken(result.Token);
+            }
+
+            Success = result.Message;
+        }
+        else
+        {
+            NavigationManager.NavigateTo("/");
+        }
+    }
+}
