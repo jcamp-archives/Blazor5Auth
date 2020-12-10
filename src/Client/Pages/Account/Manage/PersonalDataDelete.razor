@@ -16,6 +16,7 @@
     <div class="col-md-6">
         <EditForm Model="Model" OnValidSubmit="SubmitDeleteData">
             <FluentValidationValidator />
+            <ServerValidator @ref="_serverValidator" />
             <ValidationSummary />
             <div class="form-group">
                 <label for="password">Password</label>
