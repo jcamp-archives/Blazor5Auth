@@ -1,12 +1,26 @@
-﻿<AuthorizeView>
+﻿@using Microsoft.AspNetCore.Components.Authorization
+
+@inject NavigationManager Navigation
+
+<AuthorizeView>
     <Authorized>
-        <a href="/Account/Manage">
-            Hello, @context.User.Identity.Name!
-        </a>
-        <a href="/Account/LogOut">Log out</a>
+        <a href="account/manage/">Hello, @context.User.Identity.Name!</a>
+        <button class="nav-link btn btn-link" @onclick="BeginSignOut">Log out</button>
     </Authorized>
     <NotAuthorized>
-        <a href="/Account/Register">Register</a>
-        <a href="/Account/Login">Log in</a>
+        <a href="account/register">Register</a>
+        <button class="nav-link btn btn-link" @onclick="BeginLogIn">Log in</button>
     </NotAuthorized>
 </AuthorizeView>
+
+@code{
+    private void BeginLogIn(MouseEventArgs args)
+    {
+        Navigation.NavigateWithNewReturnUrl("/account/login");
+    }
+
+    private void BeginSignOut(MouseEventArgs args)
+    {
+        Navigation.NavigateWithNewReturnUrl("/account/logout");
+    }
+}

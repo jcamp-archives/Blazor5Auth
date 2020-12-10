@@ -301,7 +301,7 @@ paket-files/
 
 # JetBrains Rider
 .idea/
-*.sln.iml 
+*.sln.iml
 
 # CodeRush personal settings
 .cr/personal
@@ -354,9 +354,17 @@ MigrationBackup/
 .ionide/
 
 # MacOS
-.DS_Store 
+.DS_Store
 
-#VS Code
-.vscode/
+### VisualStudioCode ###
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+
+### VisualStudioCode Patch ###
+# Ignore all local history of files
+**/.history
 
 app.db*

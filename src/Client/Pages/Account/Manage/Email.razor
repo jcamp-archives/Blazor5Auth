@@ -1,9 +1,16 @@
 ﻿@page "/account/manage/email"
-@inject HttpClient Http
 @attribute [Authorize]
+@using Features.Account.Manage
+@inject HttpClient Http
 
 <h4>Manage Email</h4>
-
+@if (!string.IsNullOrEmpty(Success))
+{
+    <div class="alert alert-success alert-dismissible" role="alert">
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        @Success
+    </div>
+}
 <div class="row">
     <div class="col-md-6">
         <EditForm Model="Model">
@@ -24,30 +31,53 @@
                 else
                 {
                     <InputText Id="email" class="form-control" @bind-Value="EmailAddress" disabled/>
-                    <button id="email-verification" type="submit" asp-page-handler="SendVerificationEmail" class="btn btn-link">Send verification email</button>
+                    <button id="email-verification" type="submit" @onclick="SendVerificationEmail" class="btn btn-link">Send verification email</button>
                 }
             </div>
-            
+
             <div class="form-group">
                 <label for="newemail">New Email</label>
                 <InputText Id="newemail" class="form-control" @bind-Value="Model.NewEmail"/>
                 <ValidationMessage For="@(() => Model.NewEmail)"/>
             </div>
-            <button type="submit" class="btn btn-primary">Change email</button>
+            <button type="submit" class="btn btn-primary" @onclick="SendChangeEmail">Change email</button>
         </EditForm>
     </div>
 </div>
 
 @code
 {
-    public ChangeEmailModel Model = new ChangeEmailModel();
-    public string EmailAddress { get; set; }
-    public bool IsEmailConfirmed { get; set; }
-    
+    private ChangeEmail.Command Model = new();
+    private string Success { get; set; }
+    private string EmailAddress { get; set; }
+    private bool IsEmailConfirmed { get; set; } = true;
+
     protected override async Task OnInitializedAsync()
     {
-        var result = await Http.GetFromJsonAsync<UserProfileModel>("api/account/userprofile");
+        var result = await Http.GetFromJsonAsync<UserProfile.Command>("api/account/manage/userprofile");
         EmailAddress = result.Email;
+        IsEmailConfirmed = result.IsEmailConfirmed;
     }
-    
+
+    private async Task SendChangeEmail() {
+        var response = await Http.PostAsJsonAsync("api/account/manage/changeemail", Model);
+        var result = await response.Content.ReadFromJsonAsync<ChangeEmail.Result>();
+
+        if (result.IsSuccessful)
+        {
+            Success = result.Message;
+        }
+    }
+
+    private async Task SendVerificationEmail() {
+        var response = await Http.PostAsJsonAsync("api/account/manage/sendverificationemail", new {});
+        var result = await response.Content.ReadFromJsonAsync<ChangeEmail.Result>();
+
+        if (result.IsSuccessful)
+        {
+            Success = result.Message;
+        }
+
+    }
+
 }

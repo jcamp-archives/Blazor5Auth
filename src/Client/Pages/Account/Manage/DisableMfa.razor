@@ -1,0 +1,37 @@
+﻿@page "/account/manage/DisableMfa"
+@attribute [Authorize]
+@using Features.Base
+@inject IAuthService AuthService
+@inject NavigationManager NavigationManager
+@inject HttpClient Http
+
+<h1>Disable multi-factor authentication (MFA)</h1>
+
+<div class="alert alert-warning" role="alert">
+    <p>
+        <strong>This action only disables MFA.</strong>
+    </p>
+    <p>
+        Disabling MFA does not change the keys used in authenticator apps. If you wish to change the key
+        used in an authenticator app you should <a asp-page="./ResetAuthenticator">reset your authenticator keys.</a>
+    </p>
+</div>
+
+<div>
+    <button @onclick="HandleDisable" class="btn btn-danger" type="submit">Disable MFA</button>
+</div>
+
+@code {
+
+    private async Task HandleDisable()
+    {
+        var response = await Http.PostAsJsonAsync("api/account/manage/mfadisable", new {});
+        var result = await response.Content.ReadFromJsonAsync<BaseResult>();
+
+        if (result.IsSuccessful)
+        {
+            NavigationManager.NavigateTo("/Account/Manage/TwoFactorAuthentication");
+        }
+    }
+
+}

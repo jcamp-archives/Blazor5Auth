@@ -1,0 +1,19 @@
+{
+    "folders": [
+        {
+            "name": "All",
+            "path": "."
+        },
+        {
+            "name": "IdentityServer",
+            "path": "identityserver",
+        },
+        {
+            "name": "Blazor5Auth",
+            "path": "src",
+        }
+    ],
+    "settings": {
+        "omnisharp.defaultLaunchSolution": "Blazor5Auth.sln"
+    }
+}

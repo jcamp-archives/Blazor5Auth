@@ -1,4 +1,5 @@
 ﻿@page "/account/login"
+@using Features.Account
 @inject IAuthService AuthService
 @inject NavigationManager NavigationManager
 
@@ -15,7 +16,7 @@
     <div class="card-body">
         <h5 class="card-title">Please enter your details</h5>
         <EditForm Model="loginModel" OnValidSubmit="HandleLogin">
-            <DataAnnotationsValidator />
+            <FluentValidationValidator />
             <ValidationSummary />
 
             <div class="form-group">
@@ -32,10 +33,22 @@
         </EditForm>
     </div>
 </div>
+ <div class="form-group">
+    <p>
+        <a id="forgot-password" href="/Account/ForgotPassword">Forgot your password?</a>
+    </p>
+    <p>
+        <a href="/Account/Register">Register as a new user</a>
+    </p>
+    <p>
+        <a id="resend-confirmation" href="/Account/ResendEmailConfirmation">Resend email confirmation</a>
+    </p>
+</div>
+
 
 @code {
 
-    private LoginModel loginModel = new LoginModel();
+    private LoginPassword.Command loginModel = new LoginPassword.Command();
     private bool ShowErrors;
     private string Error = "";
 
@@ -45,17 +58,25 @@
 
         var result = await AuthService.Login(loginModel);
 
-        if (result.Successful)
+        if (result.IsSuccessful)
         {
-            NavigationManager.NavigateTo("/");
+            NavigationManager.NavigateToReturnUrl("/");
         }
         else if (result.RequiresTwoFactor)
         {
-            NavigationManager.NavigateTo("/Account/LoginWith2fa");
+            NavigationManager.NavigateWithExistingReturnUrl("/Account/LoginWith2fa");
+        }
+        else if (result.RequiresEmailConfirmation)
+        {
+            NavigationManager.NavigateWithExistingReturnUrl("/Account/ResendEmailConfirmation");
+        }
+        else if (result.IsLockedOut)
+        {
+            NavigationManager.NavigateTo("/Account/Lockout");
         }
         else
         {
-            Error = result.Error;
+            Error = result.Message;
             ShowErrors = true;
         }
     }

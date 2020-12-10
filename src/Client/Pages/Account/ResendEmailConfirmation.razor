@@ -1,3 +1,64 @@
 ﻿@page "/account/resendemailconfirmation"
 
+@inject NavigationManager NavigationManager
+@inject AuthenticationStateProvider AuthenticationStateProvider
+@inject HttpClient Http
+@inject IAuthService AuthService
+
 <h1>Resend Email Confirmation</h1>
+@if (!string.IsNullOrEmpty(Status))
+{
+    <div class="alert alert-success alert-dismissible" role="alert">
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        @Status
+    </div>
+}
+@if (!string.IsNullOrEmpty(Error))
+{
+    <div class="alert alert-danger alert-dismissible" role="alert">
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        @Error
+    </div>
+}
+<div class="row">
+    <div class="col-md-6">
+        <EditForm Model="Model" OnValidSubmit="SubmitResend">
+            <FluentValidationValidator />
+            <ServerValidator @ref="serverValidator" />
+            <ValidationSummary />
+            <div class="form-group">
+                <label for="email">Email</label>
+                <InputText Id="email" class="form-control" @bind-Value="Model.Email"/>
+                <ValidationMessage For="@(() => Model.Email)"/>
+            </div>
+            <button type="submit" class="btn btn-primary">Resend</button>
+        </EditForm>
+    </div>
+</div>
+
+@code
+{
+    private Features.Account.ResendEmailConfirmation.Command Model = new();
+    private string Status { get; set; }
+    private string Error { get; set; }
+    private ServerValidator serverValidator;
+
+    private async Task SubmitResend()
+    {
+        var url = "api/account/resendemailconfirmation";
+
+        var response = await Http.PostAsJsonAsync(url, Model);
+        var result = await response.Content.ReadFromJsonAsync<Features.Account.ResendEmailConfirmation.Result>();
+
+        if (result.IsSuccessful)
+        {
+            Status = result.Message;
+        }
+        else
+        {
+            serverValidator.DisplayErrors(result.Errors);
+            Error = result.Message;
+        }
+    }
+
+}

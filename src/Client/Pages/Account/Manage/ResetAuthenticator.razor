@@ -1,8 +1,9 @@
 ﻿@page "/account/manage/resetauthenticator"
+@attribute [Authorize]
+@using Features.Base
 @inject IAuthService AuthService
 @inject NavigationManager NavigationManager
 @inject HttpClient Http
-@attribute [Authorize]
 
 <h1>Reset authenticator key</h1>
 
@@ -24,10 +25,10 @@
 
     private async Task HandleReset()
     {
-        var response = await Http.PostAsJsonAsync("api/setupmfa/resetkey", new { });
-        var result = await response.Content.ReadFromJsonAsync<VerifyMfaResult>();
+        var response = await Http.PostAsJsonAsync("api/account/manage/mfaresetkey", new { });
+        var result = await response.Content.ReadFromJsonAsync<BaseResult>();
 
-        if (result.Successful)
+        if (result.IsSuccessful)
         {
             NavigationManager.NavigateTo("/Account/Manage/TwoFactorAuthentication");
         }

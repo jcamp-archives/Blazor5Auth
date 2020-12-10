@@ -1,4 +1,5 @@
 ﻿@page "/account/loginwith2fa"
+@using Features.Account
 @inject IAuthService AuthService
 @inject NavigationManager NavigationManager
 
@@ -17,7 +18,7 @@
     <div class="card-body">
         <h5 class="card-title">Please enter your details</h5>
         <EditForm Model="loginModel" OnValidSubmit="HandleLogin">
-            <DataAnnotationsValidator />
+            <FluentValidationValidator />
             <ValidationSummary />
             <div class="form-group">
                 <label for="email">Verification Code</label>
@@ -34,36 +35,40 @@
 </div>
 <p>
     Don't have access to your authenticator device? You can
-    <a id="recovery-code-login" href="/Account/LoginWithRecoveryCode">log in with a recovery code</a>.
+    <a href="#" @onclick="GoToRecovery" @onclick:preventDefault>log in with a recovery code</a>.
 </p>
 
 @code {
 
-    private Login2faModel loginModel = new Login2faModel();
+    private LoginMultiFactor.Command loginModel = new();
     private bool ShowErrors;
     private string Error = "";
 
     protected override async Task OnInitializedAsync()
     {
         var result = await AuthService.CheckMfa();
-        if (!result.Successful) NavigationManager.NavigateTo("/Account/Login");
+        if (!result.IsSuccessful) NavigationManager.NavigateWithExistingReturnUrl("/Account/Login");
     }
 
     private async Task HandleLogin()
     {
         ShowErrors = false;
 
-        var result = await AuthService.Login2fa(loginModel);
+        var result = await AuthService.LoginMfa(loginModel);
 
-        if (result.Successful)
+        if (result.IsSuccessful)
         {
-            NavigationManager.NavigateTo("/");
+            NavigationManager.NavigateToReturnUrl("/");
         }
         else
         {
-            Error = result.Error;
+            Error = result.Message;
             ShowErrors = true;
         }
+    }
+
+    private void GoToRecovery() {
+        NavigationManager.NavigateWithExistingReturnUrl("/Account/LoginWithRecoveryCode");
     }
 
 }
