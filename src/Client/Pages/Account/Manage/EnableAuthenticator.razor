@@ -1,10 +1,10 @@
 ﻿@page "/account/manage/enableauthenticator"
+@attribute [Authorize]
 @using Features.Account.Manage
 @using Features.Base
 @inject IAuthService AuthService
 @inject NavigationManager NavigationManager
 @inject HttpClient Http
-@attribute [Authorize]
 
 <h1>Configure authenticator app</h1>
 

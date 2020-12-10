@@ -26,6 +26,7 @@ namespace Features.Account
                 var result = await _signInManager.PasswordSignInAsync(request.Email, request.Password, false, false);
 
                 if (result.RequiresTwoFactor) return new Result {IsSuccessful = false, RequiresTwoFactor = true};
+                if (result.IsLockedOut) return new Result {IsSuccessful = false, IsLockedOut = true};
 
                 if (result.IsNotAllowed) {
                     var user2 = await _signInManager.UserManager.FindByEmailAsync(request.Email);

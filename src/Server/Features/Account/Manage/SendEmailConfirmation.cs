@@ -15,7 +15,7 @@ using Microsoft.AspNetCore.WebUtilities;
 namespace Features.Account.Manage
 {
     //this allows us to avoid Create. in front of results, commands, etc
-    public class SendVerificationEmail_ : SendVerificationEmail
+    public class SendEmailConfirmation_ : SendEmailConfirmation
     {
         public class CommandHandler : ICommandHandler
         {

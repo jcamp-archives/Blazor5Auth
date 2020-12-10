@@ -9,7 +9,7 @@ using MediatR;
 
 namespace Features.Account.Manage
 {
-    public class SendVerificationEmail
+    public class SendEmailConfirmation
     {
         public class Command : IRequest<Result> { }
 

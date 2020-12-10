@@ -1,8 +1,8 @@
 ﻿@page "/account/manage/twofactorauthentication"
+@attribute [Authorize]
 @using Features.Account.Manage
 @using Features.Base
 @inject HttpClient Http
-@attribute [Authorize]
 
 <h4>Two Factor Authentication</h4>
 

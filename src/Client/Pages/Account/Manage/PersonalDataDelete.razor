@@ -1,0 +1,57 @@
+﻿@page "/account/manage/PersonalData/Delete"
+@attribute [Authorize]
+@inject IAuthService AuthService
+@inject NavigationManager NavigationManager
+@inject HttpClient Http
+
+<h4>Delete Personal Data</h4>
+
+<div class="alert alert-warning" role="alert">
+    <p>
+        <strong>Deleting this data will permanently remove your account, and this cannot be recovered.</strong>
+    </p>
+</div>
+
+<div class="row">
+    <div class="col-md-6">
+        <EditForm Model="Model" OnValidSubmit="SubmitDeleteData">
+            <FluentValidationValidator />
+            <ValidationSummary />
+            <div class="form-group">
+                <label for="password">Password</label>
+                <InputText Id="password" type="password" class="form-control" @bind-Value="Model.Password"/>
+                <ValidationMessage For="@(() => Model.Password)"/>
+            </div>
+            <button class="btn btn-danger" type="submit">Delete data and close my account</button>
+        </EditForm>
+    </div>
+</div>
+
+
+@code
+{
+    private Features.Account.Manage.PersonalData.Command Model = new();
+    private string Success { get; set; }
+    private string Error { get; set; }
+    private ServerValidator _serverValidator;
+
+    private async Task SubmitDeleteData()
+    {
+        Error = "";
+        Success = "";
+        var response = await Http.PostAsJsonAsync("api/account/manage/deletepersonaldata", Model);
+        var result = await response.Content.ReadFromJsonAsync<Features.Account.Manage.PersonalData.Result>();
+
+        if (result.IsSuccessful)
+        {
+            await AuthService.Logout();
+            NavigationManager.NavigateTo("/");
+        }
+        else
+        {
+            _serverValidator.DisplayErrors(result.Errors);
+            Error = result.Message;
+        }
+    }
+
+}

@@ -1,7 +1,7 @@
 ﻿@page "/account/manage/email"
+@attribute [Authorize]
 @using Features.Account.Manage
 @inject HttpClient Http
-@attribute [Authorize]
 
 <h4>Manage Email</h4>
 @if (!string.IsNullOrEmpty(Success))

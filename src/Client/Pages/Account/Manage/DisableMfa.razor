@@ -1,9 +1,9 @@
 ﻿@page "/account/manage/DisableMfa"
+@attribute [Authorize]
 @using Features.Base
 @inject IAuthService AuthService
 @inject NavigationManager NavigationManager
 @inject HttpClient Http
-@attribute [Authorize]
 
 <h1>Disable multi-factor authentication (MFA)</h1>
 

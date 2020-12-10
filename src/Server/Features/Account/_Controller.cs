@@ -34,7 +34,13 @@ namespace Features.Account
         public async Task<IActionResult> ConfirmEmail(ConfirmEmail.Command model) => await Send(model);
 
         [HttpPost]
+        public async Task<IActionResult> ResendEmailConfirmation(ResendEmailConfirmation.Command model) => await Send(model);
+
+        [HttpPost]
         public async Task<IActionResult> ForgotPassword(ForgotPassword.Command model) => await Send(model);
+
+        [HttpPost]
+        public async Task<IActionResult> ResetPassword(ResetPassword.Command model) => await Send(model);
     }
 
 }

@@ -41,5 +41,12 @@ namespace Blazor5Auth.Server.Extensions
             return result;
         }
 
+        public static T WithError<T>(this T result, string field, string error) where T : BaseResult
+        {
+            result.IsSuccessful = false;
+            result.Errors.Add(new KeyValuePair<string, string[]>(field, new string[] {error}));
+            return result;
+        }
+
     }
 }

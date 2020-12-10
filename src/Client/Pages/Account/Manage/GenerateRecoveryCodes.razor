@@ -1,9 +1,9 @@
 ﻿@page "/account/manage/GenerateRecoveryCodes"
+@attribute [Authorize]
 @using Features.Account.Manage
 @inject IAuthService AuthService
 @inject NavigationManager NavigationManager
 @inject HttpClient Http
-@attribute [Authorize]
 
 <h1>Generate Recovery Codes</h1>
 

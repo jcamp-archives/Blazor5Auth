@@ -43,13 +43,22 @@ namespace Features.Account.Manage
         public async Task<IActionResult> ChangeEmail(ChangeEmail.Command command) => await Send(command);
 
         [HttpPost]
-        public async Task<IActionResult> SendVerificationEmail() => await Send(new SendVerificationEmail.Command());
+        public async Task<IActionResult> ChangePassword(ChangePassword.Command command) => await Send(command);
+
+        [HttpPost]
+        public async Task<IActionResult> SendEmailConfirmation() => await Send(new SendEmailConfirmation.Command());
 
         [HttpPost]
         public async Task<IActionResult> ConfirmEmailChange(ConfirmEmailChange.Command model) {
             model.ClientAuth = true;
             return await Send(model);
         }
+
+        [HttpPost]
+        public async Task<IActionResult> DownloadPersonalData(PersonalData.Query model) => await Send(model);
+
+        [HttpPost]
+        public async Task<IActionResult> DeletePersonalData(PersonalData.Command model) => await Send(model);
 
     }
 }

@@ -1,0 +1,32 @@
+﻿@page "/account/manage/PersonalData/Download"
+@attribute [Authorize]
+@inject IAuthService AuthService
+@inject NavigationManager NavigationManager
+@inject HttpClient Http
+
+<h4>Download Personal Data</h4>
+
+<div class="row">
+    <div class="col-md-6">
+        <textarea class="form-control" @bind="Body" style="height: 20rem;"></textarea>
+    </div>
+</div>
+
+
+@code
+{
+    private string Body { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        var response = await Http.PostAsJsonAsync("api/account/manage/downloadpersonaldata", new {});
+        var result = await response.Content.ReadFromJsonAsync<Features.Account.Manage.PersonalData.QueryResult>();
+
+        if (result.IsSuccessful)
+        {
+            Body = result.JsonData;
+        }
+    }
+
+
+}

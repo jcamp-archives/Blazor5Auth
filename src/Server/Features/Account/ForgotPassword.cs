@@ -42,13 +42,14 @@ namespace Features.Account
                     return new Result().Succeeded();
                 }
 
-                var code = await _signInManager.UserManager.GenerateEmailConfirmationTokenAsync(user);
+                var code = await _signInManager.UserManager.GeneratePasswordResetTokenAsync(user);
+
                 code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
 
                 var httpRequest = _contextAccessor.HttpContext.Request;
                 var domain = $"{httpRequest.Scheme}://{httpRequest.Host}";
 
-                var callbackUrl = $"{domain}/Account/ResetPassword?code={code}";
+                var callbackUrl = $"{domain}/Account/ResetPassword?code={code}&email={user.Email}";
 
                 await _emailService.SendAsync(user.Email, "Reset Password",
                     $"Please reset your password by <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>.");
