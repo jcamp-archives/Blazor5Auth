@@ -9,6 +9,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Blazor5Auth.Client", "Clien
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Blazor5Auth.Shared", "Shared\Blazor5Auth.Shared.csproj", "{706FE48F-DE15-427D-8547-5F06ADD94236}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Tailwind", "Tailwind\Tailwind.csproj", "{A4E6B8EB-224B-4931-BC2B-95F1EF66BD2E}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,6 +29,10 @@ Global
 		{706FE48F-DE15-427D-8547-5F06ADD94236}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{706FE48F-DE15-427D-8547-5F06ADD94236}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{706FE48F-DE15-427D-8547-5F06ADD94236}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A4E6B8EB-224B-4931-BC2B-95F1EF66BD2E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A4E6B8EB-224B-4931-BC2B-95F1EF66BD2E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A4E6B8EB-224B-4931-BC2B-95F1EF66BD2E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A4E6B8EB-224B-4931-BC2B-95F1EF66BD2E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

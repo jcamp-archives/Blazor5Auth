@@ -3,7 +3,7 @@
 @inject IAuthService AuthService
 @inject NavigationManager NavigationManager
 
-<h1>Login</h1>
+<TwHeader1 class="border-b-2">Login</TwHeader1>
 
 @if (ShowErrors)
 {
@@ -12,28 +12,30 @@
     </div>
 }
 
-<div class="card">
-    <div class="card-body">
-        <h5 class="card-title">Please enter your details</h5>
-        <EditForm Model="loginModel" OnValidSubmit="HandleLogin">
-            <FluentValidationValidator />
-            <ValidationSummary />
+<div class="px-4 py-5 border border-gray-300 rounded lg:w-1/2">
+    <h3 class="text-lg leading-6 font-medium text-gray-900">
+        Please enter your details
+    </h3>
+    <EditForm Model="loginModel" OnValidSubmit="HandleLogin">
+        <FluentValidationValidator />
+        <ValidationSummary />
 
-            <div class="form-group">
-                <label for="email">Email address</label>
-                <InputText Id="email" Class="form-control" @bind-Value="loginModel.Email" />
-                <ValidationMessage For="@(() => loginModel.Email)" />
-            </div>
-            <div class="form-group">
-                <label for="password">Password</label>
-                <InputText Id="password" type="password" Class="form-control" @bind-Value="loginModel.Password" />
-                <ValidationMessage For="@(() => loginModel.Password)" />
-            </div>
-            <button type="submit" class="btn btn-primary">Submit</button>
-        </EditForm>
-    </div>
+        <TwInputText @bind-Value="@loginModel.Email"
+                     ValidationFor="@(() => loginModel.Email)"
+                     Label="Email Address"
+                     type="email"
+                     placeholder="you@example.com" />
+
+        <TwInputText @bind-Value="@loginModel.Password"
+                     ValidationFor="@(() => loginModel.Password)"
+                     Label="Password"
+                     type="password" />
+
+        <button type="submit" class="btn btn-primary">Submit</button>
+    </EditForm>
 </div>
- <div class="form-group">
+
+<div class="form-group">
     <p>
         <a id="forgot-password" href="/Account/ForgotPassword">Forgot your password?</a>
     </p>

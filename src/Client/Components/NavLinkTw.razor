@@ -1,0 +1,18 @@
+<NavLink class="flex flex-row items-center h-12 px-4 py-2 text-sm text-gray-300 bg-white rounded bg-opacity-0 hover:bg-opacity-10"
+    href="@Href" Match="@Match">
+    @ChildContent
+</NavLink>
+
+@code {
+    [Parameter]
+    public string Href { get; set; }
+
+    /// <summary>
+    /// Gets or sets a value representing the URL matching behavior.
+    /// </summary>
+    [Parameter]
+    public NavLinkMatch Match { get; set; } = NavLinkMatch.Prefix;
+
+    [Parameter]
+    public RenderFragment ChildContent { get; set; }
+}

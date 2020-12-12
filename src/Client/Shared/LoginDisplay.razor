@@ -4,12 +4,16 @@
 
 <AuthorizeView>
     <Authorized>
-        <a href="account/manage/">Hello, @context.User.Identity.Name!</a>
-        <button class="nav-link btn btn-link" @onclick="BeginSignOut">Log out</button>
+        <div>
+            <a href="account/manage/">Hello, @context.User.Identity.Name!</a>
+            <button class="px-4 focus:outline-none" @onclick="BeginSignOut">Log out</button>
+        </div>
     </Authorized>
     <NotAuthorized>
-        <a href="account/register">Register</a>
-        <button class="nav-link btn btn-link" @onclick="BeginLogIn">Log in</button>
+        <div>
+            <a href="account/register">Register</a>
+            <button class="px-4 focus:outline-none" @onclick="BeginLogIn">Log in</button>
+        </div>
     </NotAuthorized>
 </AuthorizeView>
 

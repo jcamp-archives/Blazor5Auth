@@ -1,0 +1,88 @@
+@page "/inputs"
+@using Blazor5Auth.Shared
+
+<h1 class="mb-2 text-4xl font-medium">Inputs</h1>
+
+<div class="md:w-1/2">
+<EditForm Model="Model">
+    <DataAnnotationsValidator />
+<EditContextClassHelper ValidClass="focus:ring-indigo-500 focus:border-indigo-500" ErrorClass="pr-10 text-red-900 placeholder-red-300 border-red-300 focus:ring-red-500 focus:border-red-500" />
+
+ <TwInputText @bind-Value="@Model.EmailAddress"
+                           ValidationFor="@(() => Model.EmailAddress)"
+                           Label="Email - Tailwind InputText"
+                           placeholder="you@example.com" />
+
+<div>
+    <label for="EmailAddress" class="block text-sm font-medium text-gray-700">Email - Tailwind with Validation Icon</label>
+    <div class="relative mt-1 rounded-md shadow-sm">
+       <InputText @bind-Value="@Model.EmailAddress" type="text" class="block w-full border-gray-300 rounded-md sm:text-sm" placeholder="you@example.com" />
+        <ValidationIconTw For="@(() => Model.EmailAddress)" />
+    </div>
+    <ValidationMessageTw For="@(() => Model.EmailAddress)" />
+</div>
+
+<div>
+    <label for="EmailAddress" class="block text-sm font-medium text-gray-700">Email - Tailwind with Validation Message</label>
+    <div class="mt-1">
+       <InputText @bind-Value="@Model.EmailAddress" type="text" class="block w-full border-gray-300 rounded-md shadow-sm sm:text-sm" placeholder="you@example.com" />
+    </div>
+    <ValidationMessageTw For="@(() => Model.EmailAddress)" />
+</div>
+
+<div>
+  <label for="email" class="block text-sm font-medium text-gray-700">Email</label>
+  <div class="mt-1">
+    <input  type="text" name="email" id="email" class="block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" placeholder="you@example.com">
+  </div>
+</div>
+
+<div>
+  <label for="email" class="block text-sm font-medium text-gray-700">Email</label>
+  <div class="mt-1">
+    <input type="text" name="email" id="email" class="block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" placeholder="you@example.com" aria-describedby="email-description">
+  </div>
+  <p class="mt-2 text-sm text-gray-500" id="email-description">Make your password short and easy to guess.</p>
+</div>
+
+<div>
+  <label for="email" class="block text-sm font-medium text-gray-700">Email</label>
+  <div class="relative mt-1 rounded-md shadow-sm">
+    <input type="text" name="email" id="email" class="block w-full pr-10 text-red-900 placeholder-red-300 border-red-300 rounded-md focus:outline-none focus:ring-red-500 focus:border-red-500 sm:text-sm" placeholder="you@example.com" value="adamwathan" aria-invalid="true" aria-describedby="email-error">
+
+    <div class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
+      <!-- Heroicon name: exclamation-circle -->
+      <svg class="w-5 h-5 text-red-500" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+        <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clip-rule="evenodd" />
+      </svg>
+    </div>
+
+  </div>
+  <p class="mt-2 text-sm text-red-600" id="email-error">Your password must be less than 4 characters.</p>
+</div>
+
+<div>
+  <label for="email" class="block text-sm font-medium text-gray-700">Email</label>
+  <div class="relative mt-1 rounded-md shadow-sm">
+    <input type="text" name="email" id="email" class="block w-full border-gray-300 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" placeholder="you@example.com" value="adamwathan" aria-invalid="true" aria-describedby="email-error">
+  </div>
+  <p class="mt-2 text-sm text-red-600" id="email-error"></p>
+</div>
+
+<div>
+  <div class="flex justify-between">
+    <label for="email" class="block text-sm font-medium text-gray-700">Email</label>
+    <span class="text-sm text-gray-500" id="email-optional">Optional</span>
+  </div>
+  <div class="mt-1">
+    <input type="text" name="email" id="email" class="block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" placeholder="you@example.com" aria-describedby="email-optional">
+  </div>
+</div>
+</EditForm>
+</div>
+
+@code {
+    private Person Model {get;set;} = new();
+
+
+}
