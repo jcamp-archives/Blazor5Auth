@@ -3,14 +3,13 @@
 @inject NavigationManager NavigationManager
 @inject HttpClient Http
 
-<h1>Confirm Email</h1>
+<TwHeader1>Confirm Email</TwHeader1>
 
 @if (!string.IsNullOrEmpty(Success))
 {
-    <div class="alert alert-success alert-dismissible" role="alert">
-        <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+    <TwAlertSuccess>
         @Success
-    </div>
+    </TwAlertSuccess>
 }
 
 @code

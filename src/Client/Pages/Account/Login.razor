@@ -3,22 +3,19 @@
 @inject IAuthService AuthService
 @inject NavigationManager NavigationManager
 
-<TwHeader1 class="border-b-2">Login</TwHeader1>
+<TwHeader1>Login</TwHeader1>
 
-@if (ShowErrors)
+@if (!string.IsNullOrEmpty(Error))
 {
-    <div class="alert alert-danger" role="alert">
-        <p>@Error</p>
-    </div>
+    <TwAlertError>
+        @Error
+    </TwAlertError>
 }
 
-<div class="px-4 py-5 border border-gray-300 rounded lg:w-1/2">
-    <h3 class="text-lg leading-6 font-medium text-gray-900">
-        Please enter your details
-    </h3>
+<TwCard Title="Please enter your details" Class="lg:w-1/2">
     <EditForm Model="loginModel" OnValidSubmit="HandleLogin">
         <FluentValidationValidator />
-        <ValidationSummary />
+        <TwEditContextClasses />
 
         <TwInputText @bind-Value="@loginModel.Email"
                      ValidationFor="@(() => loginModel.Email)"
@@ -31,33 +28,22 @@
                      Label="Password"
                      type="password" />
 
-        <button type="submit" class="btn btn-primary">Submit</button>
+        <TwButton>Submit</TwButton>
     </EditForm>
-</div>
+    <div class="flex flex-col bg-gray-50 mt-4 px-4 py-4 sm:px-6">
+        <a class="text-blue-500" href="/Account/ForgotPassword">Forgot your password?</a>
+        <a class="text-blue-500" href="/Account/Register">Register as a new user</a>
+        <a class="text-blue-500" href="/Account/ResendEmailConfirmation">Resend email confirmation</a>
+    </div>
+</TwCard>
 
-<div class="form-group">
-    <p>
-        <a id="forgot-password" href="/Account/ForgotPassword">Forgot your password?</a>
-    </p>
-    <p>
-        <a href="/Account/Register">Register as a new user</a>
-    </p>
-    <p>
-        <a id="resend-confirmation" href="/Account/ResendEmailConfirmation">Resend email confirmation</a>
-    </p>
-</div>
-
-
-@code {
-
+@code
+{
     private LoginPassword.Command loginModel = new LoginPassword.Command();
-    private bool ShowErrors;
     private string Error = "";
 
     private async Task HandleLogin()
     {
-        ShowErrors = false;
-
         var result = await AuthService.Login(loginModel);
 
         if (result.IsSuccessful)
@@ -79,8 +65,6 @@
         else
         {
             Error = result.Message;
-            ShowErrors = true;
         }
     }
-
 }

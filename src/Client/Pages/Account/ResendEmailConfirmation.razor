@@ -5,36 +5,35 @@
 @inject HttpClient Http
 @inject IAuthService AuthService
 
-<h1>Resend Email Confirmation</h1>
+<TwHeader1>Resend Email Confirmation</TwHeader1>
+
 @if (!string.IsNullOrEmpty(Status))
 {
-    <div class="alert alert-success alert-dismissible" role="alert">
-        <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+    <TwAlertSuccess>
         @Status
-    </div>
+    </TwAlertSuccess>
 }
 @if (!string.IsNullOrEmpty(Error))
 {
-    <div class="alert alert-danger alert-dismissible" role="alert">
-        <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+    <TwAlertError>
         @Error
-    </div>
+    </TwAlertError>
 }
-<div class="row">
-    <div class="col-md-6">
-        <EditForm Model="Model" OnValidSubmit="SubmitResend">
-            <FluentValidationValidator />
-            <ServerValidator @ref="serverValidator" />
-            <ValidationSummary />
-            <div class="form-group">
-                <label for="email">Email</label>
-                <InputText Id="email" class="form-control" @bind-Value="Model.Email"/>
-                <ValidationMessage For="@(() => Model.Email)"/>
-            </div>
-            <button type="submit" class="btn btn-primary">Resend</button>
-        </EditForm>
-    </div>
-</div>
+
+<TwCard Class="lg:w-1/2">
+    <EditForm Model="Model" OnValidSubmit="SubmitResend">
+        <FluentValidationValidator />
+        <ServerValidator @ref="serverValidator" />
+        <TwEditContextClasses />
+
+        <TwInputText @bind-Value="@Model.Email"
+                     ValidationFor="@(() => Model.Email)"
+                     type="email"
+                     Label="Email" />
+
+        <TwButton>Resend</TwButton>
+    </EditForm>
+</TwCard>
 
 @code
 {

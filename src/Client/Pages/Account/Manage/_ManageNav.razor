@@ -1,27 +1,34 @@
-﻿<ul class="nav nav-pills flex-column">
-    <li class="nav-item">
-        <NavLink class="nav-link" href="/Account/Manage/" Match="NavLinkMatch.All">
-            Profile
-        </NavLink>
-    </li>
-    <li class="nav-item">
-        <NavLink class="nav-link" href="/Account/Manage/Email">
-            Email
-        </NavLink>
-    </li>
-    <li class="nav-item">
-        <NavLink class="nav-link" href="/Account/Manage/ChangePassword">
-            Password
-        </NavLink>
-    </li>
-    <li class="nav-item">
-        <NavLink class="nav-link" href="/Account/Manage/TwoFactorAuthentication">
-            Two-factor authentication
-        </NavLink>
-    </li>
-    <li class="nav-item">
-        <NavLink class="nav-link" href="/Account/Manage/PersonalData">
-            Personal data
-        </NavLink>
-    </li>
-</ul>
+﻿<div class="flex">
+    <ul class="flex flex-col p-4 space-y-2">
+        <li>
+            <NavLink class="flex flex-row items-center h-12 px-4 py-2 text-sm text-blue-600 rounded hover:bg-gray-100"
+                     href="/Account/Manage" Match="NavLinkMatch.All">
+                Profile
+            </NavLink>
+        </li>
+        <li>
+            <NavLink class="flex flex-row items-center h-12 px-4 py-2 text-sm text-blue-600 rounded hover:bg-gray-100"
+                     href="/Account/Manage/Email">
+                Email
+            </NavLink>
+        </li>
+        <li>
+            <NavLink class="flex flex-row items-center h-12 px-4 py-2 text-sm text-blue-600 rounded hover:bg-gray-100"
+                     href="/Account/Manage/ChangePassword">
+                Password
+            </NavLink>
+        </li>
+        <li>
+            <NavLink class="flex flex-row items-center h-12 px-4 py-2 text-sm text-blue-600 rounded hover:bg-gray-100"
+                     href="/Account/Manage/TwoFactorAuthentication">
+                Two-Factor Authentication
+            </NavLink>
+        </li>
+        <li>
+            <NavLink class="flex flex-row items-center h-12 px-4 py-2 text-sm text-blue-600 rounded hover:bg-gray-100"
+                     href="/Account/Manage/PersonalData">
+                Personal data
+            </NavLink>
+        </li>
+    </ul>
+</div>

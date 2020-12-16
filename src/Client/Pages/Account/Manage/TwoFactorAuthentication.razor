@@ -4,14 +4,13 @@
 @using Features.Base
 @inject HttpClient Http
 
-<h4>Two Factor Authentication</h4>
+<TwHeader2>Two Factor Authentication</TwHeader2>
 
 @if (!string.IsNullOrEmpty(Success))
 {
-    <div class="alert alert-success alert-dismissible" role="alert">
-        <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+    <TwAlertSuccess>
         @Success
-    </div>
+    </TwAlertSuccess>
 }
 
 @if (Model != null)
@@ -42,21 +41,21 @@
 
         if (Model.IsMachineRemembered)
         {
-            <button style="margin-right: 4px;" @onclick="ForgetBrowser" type="submit" class="btn btn-primary">Forget this browser</button>
+            <a href="#" class="px-3 py-2 mr-1 mt-4 text-white bg-blue-600 rounded-md" @onclick="ForgetBrowser" @onclick:preventDefault>Forget this browser</a>
         }
-        <a href="/Account/Manage/DisableMfa" class="btn btn-primary">Disable 2FA</a>
-        <a href="/Account/Manage/GenerateRecoveryCodes" class="btn btn-primary">Reset recovery codes</a>
+        <TwButtonLink href="/Account/Manage/DisableMfa">Disable 2FA</TwButtonLink>
+        <TwButtonLink href="/Account/Manage/GenerateRecoveryCodes">Reset recovery codes</TwButtonLink>
     }
 
-    <h5>Authenticator app</h5>
+    <h5 class="my-3">Authenticator app</h5>
     @if (!Model.HasAuthenticator)
     {
-        <a id="enable-authenticator" href="/Account/Manage/EnableAuthenticator" class="btn btn-primary">Add authenticator app</a>
+        <TwButtonLink id="enable-authenticator" href="/Account/Manage/EnableAuthenticator">Add authenticator app</TwButtonLink>
     }
     else
     {
-        <a id="enable-authenticator" href="/Account/Manage/EnableAuthenticator" class="btn btn-primary">Setup authenticator app</a>
-        <a id="reset-authenticator" href="/Account/Manage/ResetAuthenticator" class="btn btn-primary">Reset authenticator app</a>
+        <TwButtonLink id="enable-authenticator" href="/Account/Manage/EnableAuthenticator">Setup authenticator app</TwButtonLink>
+        <TwButtonLink id="reset-authenticator" href="/Account/Manage/ResetAuthenticator">Reset authenticator app</TwButtonLink>
     }
 }
 
@@ -71,7 +70,7 @@
 
     private async Task ForgetBrowser()
     {
-        var response = await Http.PostAsJsonAsync("api/account/manage/mfaforgetbrowser", new {});
+        var response = await Http.PostAsJsonAsync("api/account/manage/mfaforgetbrowser", new { });
         var result = await response.Content.ReadFromJsonAsync<BaseResult>();
 
         if (result.IsSuccessful)

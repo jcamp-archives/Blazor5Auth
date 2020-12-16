@@ -3,13 +3,13 @@
 @inject IAuthService AuthService
 @inject NavigationManager NavigationManager
 
-<h1>Recovery code verification</h1>
+<TwHeader1>Recovery code verification</TwHeader1>
 
-@if (ShowErrors)
+@if (!string.IsNullOrEmpty(Error))
 {
-    <div class="alert alert-danger" role="alert">
-        <p>@Error</p>
-    </div>
+    <TwAlertError>
+        @Error
+    </TwAlertError>
 }
 
 <p>
@@ -17,25 +17,22 @@
     an authenticator app code at log in or disable 2FA and log in again.
 </p>
 
-<div class="card">
-    <div class="card-body">
-        <EditForm Model="loginModel" OnValidSubmit="HandleLogin">
-            <FluentValidationValidator />
-            <ValidationSummary />
-            <div class="form-group">
-                <label for="email">Recovery Code</label>
-                <InputText Id="email" Class="form-control" @bind-Value="loginModel.RecoveryCode" />
-                <ValidationMessage For="@(() => loginModel.RecoveryCode)" />
-            </div>
-            <button type="submit" class="btn btn-primary">Submit</button>
-        </EditForm>
-    </div>
-</div>
+<TwCard Class="lg:w-1/2">
+    <EditForm Model="loginModel" OnValidSubmit="HandleLogin">
+        <FluentValidationValidator />
+        <TwEditContextClasses />
 
-@code {
+        <TwInputText @bind-Value="@loginModel.RecoveryCode"
+                     ValidationFor="@(() => loginModel.RecoveryCode)"
+                     Label="Recovery Code" />
 
+        <TwButton>Submit</TwButton>
+    </EditForm>
+</TwCard>
+
+@code
+{
     private LoginRecoveryCode.Command loginModel = new();
-    private bool ShowErrors;
     private string Error = "";
 
     protected override async Task OnInitializedAsync()
@@ -46,8 +43,6 @@
 
     private async Task HandleLogin()
     {
-        ShowErrors = false;
-
         var result = await AuthService.LoginRecoveryCode(loginModel);
 
         if (result.IsSuccessful)
@@ -57,8 +52,6 @@
         else
         {
             Error = result.Message;
-            ShowErrors = true;
         }
     }
-
 }

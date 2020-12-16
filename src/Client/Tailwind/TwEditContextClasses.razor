@@ -1,0 +1,29 @@
+@using System.Linq
+@using Microsoft.AspNetCore.Components.Forms
+
+@code {
+    [CascadingParameter] private EditContext EditContext { get; set; }
+    [Parameter] public string ValidClass { get; set; } = "focus:ring-indigo-500 focus:border-indigo-500";
+    [Parameter] public string ErrorClass { get; set; } = "pr-10 text-red-900 placeholder-red-300 border-red-300 focus:ring-red-500 focus:border-red-500";
+
+    protected override void OnInitialized()
+    {
+        EditContext.SetFieldCssClassProvider(new ValidationFieldClassProvider(ValidClass, ErrorClass));
+    }
+
+    protected class ValidationFieldClassProvider : FieldCssClassProvider
+    {
+        private readonly string _validClass;
+        private readonly string _errorClass;
+        public ValidationFieldClassProvider(string validClass, string errorClass)
+        {
+            _validClass = validClass;
+            _errorClass = errorClass;
+        }
+        public override string GetFieldCssClass(EditContext editContext, in FieldIdentifier fieldIdentifier)
+        {
+            var hasMessages = !editContext.GetValidationMessages(fieldIdentifier).Any();
+            return hasMessages ? _validClass : _errorClass;
+        }
+    }
+}

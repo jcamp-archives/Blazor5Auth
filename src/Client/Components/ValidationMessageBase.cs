@@ -19,7 +19,10 @@ namespace Blazor5Auth.Client.Components {
 
         protected override void OnInitialized()
         {
-            _fieldIdentifier = FieldIdentifier.Create(For);
+            if (For != null)
+            {
+                _fieldIdentifier = FieldIdentifier.Create(For);
+            }
             EditContext.OnValidationStateChanged += HandleValidationStateChanged;
         }
 

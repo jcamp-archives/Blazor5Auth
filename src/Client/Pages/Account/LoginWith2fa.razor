@@ -3,45 +3,40 @@
 @inject IAuthService AuthService
 @inject NavigationManager NavigationManager
 
-<h1>Two-factor authentication</h1>
+<TwHeader1>Two-factor authentication</TwHeader1>
 
-@if (ShowErrors)
+@if (!string.IsNullOrEmpty(Error))
 {
-    <div class="alert alert-danger" role="alert">
-        <p>@Error</p>
-    </div>
+    <TwAlertError>
+        @Error
+    </TwAlertError>
 }
 
 <p>Your login is protected with an authenticator app. Enter your authenticator code below.</p>
 
-<div class="card">
-    <div class="card-body">
-        <h5 class="card-title">Please enter your details</h5>
-        <EditForm Model="loginModel" OnValidSubmit="HandleLogin">
-            <FluentValidationValidator />
-            <ValidationSummary />
-            <div class="form-group">
-                <label for="email">Verification Code</label>
-                <InputText Id="email" Class="form-control" @bind-Value="loginModel.TwoFactorCode" />
-                <ValidationMessage For="@(() => loginModel.TwoFactorCode)" />
-            </div>
-            <div class="form-check">
-                <InputCheckbox Id="remembermachine" Class="form-check-input" @bind-Value="loginModel.RememberMachine" />
-                <label class="form-check-label" for="remembermachine">Remember this machine</label>
-            </div>
-            <button type="submit" class="btn btn-primary">Submit</button>
-        </EditForm>
+<TwCard Title="Please enter your details" Class="lg:w-1/2">
+    <EditForm Model="loginModel" OnValidSubmit="HandleLogin">
+        <FluentValidationValidator />
+        <TwEditContextClasses />
+
+        <TwInputText @bind-Value="@loginModel.TwoFactorCode"
+                     ValidationFor="@(() => loginModel.TwoFactorCode)"
+                     Label="Verification Code" />
+
+        <TwInputCheckbox @bind-Value="@loginModel.RememberMachine" Id="remembermachine"
+                     Label="Remember this machine" />
+
+        <TwButton>Submit</TwButton>
+    </EditForm>
+    <div class="bg-gray-50 mt-4 px-4 py-4 sm:px-6">
+        Don't have access to your authenticator device? You can
+        <a href="#" class="text-blue-500" @onclick="GoToRecovery" @onclick:preventDefault>log in with a recovery code</a>.
     </div>
-</div>
-<p>
-    Don't have access to your authenticator device? You can
-    <a href="#" @onclick="GoToRecovery" @onclick:preventDefault>log in with a recovery code</a>.
-</p>
+</TwCard>
 
-@code {
-
+@code
+{
     private LoginMultiFactor.Command loginModel = new();
-    private bool ShowErrors;
     private string Error = "";
 
     protected override async Task OnInitializedAsync()
@@ -52,8 +47,6 @@
 
     private async Task HandleLogin()
     {
-        ShowErrors = false;
-
         var result = await AuthService.LoginMfa(loginModel);
 
         if (result.IsSuccessful)
@@ -63,12 +56,11 @@
         else
         {
             Error = result.Message;
-            ShowErrors = true;
         }
     }
 
-    private void GoToRecovery() {
+    private void GoToRecovery()
+    {
         NavigationManager.NavigateWithExistingReturnUrl("/Account/LoginWithRecoveryCode");
     }
-
 }

@@ -3,54 +3,51 @@
 @using Features.Account.Manage
 @inject HttpClient Http
 
-<h4>Profile</h4>
+<TwHeader2>Profile</TwHeader2>
+
 @if (!string.IsNullOrEmpty(Success))
 {
-    <div class="alert alert-success alert-dismissible" role="alert">
-        <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+    <TwAlertSuccess>
         @Success
-    </div>
+    </TwAlertSuccess>
 }
-<div class="row">
-    <div class="col-md-6">
-        <EditForm Model="Model" OnValidSubmit="HandleProfile">
-            <DataAnnotationsValidator />
-            <ValidationSummary />
 
-            <div class="form-group">
-                <label for="email">User Name</label>
-                <InputText Id="email" class="form-control" @bind-Value="Model.Email" disabled />
-                <ValidationMessage For="@(() => Model.Email)" />
-            </div>
-            <div class="form-group">
-                <label for="phonenumber">Phone Number</label>
-                <InputText Id="phonenumber" class="form-control" @bind-Value="Model.PhoneNumber" />
-                <ValidationMessage For="@(() => Model.PhoneNumber)" />
-            </div>
-            <button type="submit" class="btn btn-primary">Save</button>
-        </EditForm>
-    </div>
-</div>
+<TwSubCard>
+    <EditForm Model="Model" OnValidSubmit="HandleProfile">
+        <FluentValidationValidator />
+        <TwEditContextClasses />
 
-@code
+        <TwInputText @bind-Value="@Model.Email"
+                     ValidationFor="@(() => Model.Email)"
+                     disabled class="bg-gray-100"
+                     Label="User Name" />
+
+        <TwInputText @bind-Value="@Model.PhoneNumber"
+                     ValidationFor="@(() => Model.PhoneNumber)"
+                     Label="Phone Number" />
+
+        <TwButton>Save</TwButton>
+    </EditForm>
+</TwSubCard>
+
+    @code
 {
-    private UserProfile.Command Model = new();
-    private string Success { get; set; }
+        private UserProfile.Command Model = new();
+        private string Success { get; set; }
 
-    protected override async Task OnInitializedAsync()
-    {
-        Model = await Http.GetFromJsonAsync<UserProfile.Command>("api/account/manage/userprofile");
-    }
-
-    private async Task HandleProfile()
-    {
-        var response = await Http.PostAsJsonAsync("api/account/manage/userprofile", Model);
-        var result = await response.Content.ReadFromJsonAsync<UserProfile.Result>();
-
-        if (result.IsSuccessful)
+        protected override async Task OnInitializedAsync()
         {
-            Success = result.Message;
+            Model = await Http.GetFromJsonAsync<UserProfile.Command>("api/account/manage/userprofile");
+        }
+
+        private async Task HandleProfile()
+        {
+            var response = await Http.PostAsJsonAsync("api/account/manage/userprofile", Model);
+            var result = await response.Content.ReadFromJsonAsync<UserProfile.Result>();
+
+            if (result.IsSuccessful)
+            {
+                Success = result.Message;
+            }
         }
     }
-
-}

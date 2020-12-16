@@ -1,0 +1,18 @@
+﻿@inherits TailwindBase
+<div class="px-4 py-5 border border-gray-300 rounded @Class">
+    @if (!string.IsNullOrEmpty(Title)) 
+    {
+    <h3 class="text-lg leading-6 mb-4 font-medium text-gray-900 @TitleClass">
+        @Title
+    </h3>
+    }
+    @ChildContent
+</div>
+
+@code {
+    [Parameter]
+    public string Title { get; set; }
+
+    [Parameter]
+    public string TitleClass { get; set; }
+}

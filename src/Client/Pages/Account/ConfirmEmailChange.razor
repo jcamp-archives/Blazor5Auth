@@ -1,18 +1,16 @@
 ﻿@page "/account/confirmemailchange"
-@using Features.Base
 @inject NavigationManager NavigationManager
 @inject AuthenticationStateProvider AuthenticationStateProvider
 @inject HttpClient Http
 @inject IAuthService AuthService
 
-<h1>Confirm Email Change</h1>
+<TwHeader1>Confirm Email Change</TwHeader1>
 
 @if (!string.IsNullOrEmpty(Success))
 {
-    <div class="alert alert-success alert-dismissible" role="alert">
-        <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+    <TwAlertSuccess>
         @Success
-    </div>
+    </TwAlertSuccess>
 }
 
 @code
@@ -40,7 +38,8 @@
 
         if (result.IsSuccessful)
         {
-            if (user.Identity.IsAuthenticated && !string.IsNullOrEmpty(result.Token)) {
+            if (user.Identity.IsAuthenticated && !string.IsNullOrEmpty(result.Token))
+            {
                 await AuthService.UpdateToken(result.Token);
             }
 

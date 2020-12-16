@@ -8,14 +8,15 @@
         <label for="@Id" class="block text-sm font-medium text-gray-700">@Label</label>
     }
     <div class="relative mt-1 rounded-md shadow-sm">
-        <input id="@Id" @bind="@CurrentValue" type="text" class="block w-full border-gray-300 rounded-md sm:text-sm @CssClass" @attributes="AdditionalAttributes" />
-        <ValidationIconTw For="@ValidationFor" />
+        <input id="@Id" @bind="@CurrentValue" type="text" class="block w-full border-gray-300 rounded-md sm:text-sm @Class" @attributes="AdditionalAttributes" />
+        <TwValidationIcon For="@ValidationFor" />
     </div>
-    <ValidationMessageTw For="@ValidationFor" />
+    <TwValidationMessage For="@ValidationFor" />
 </div>
 
 @code{
     [Parameter] public string Id { get; set; }
+    [Parameter] public string Class { get; set; }
     [Parameter] public string Label { get; set; }
     [Parameter] public Expression<Func<string>> ValidationFor { get; set; }
 

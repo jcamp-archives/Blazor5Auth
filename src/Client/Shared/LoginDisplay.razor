@@ -5,13 +5,13 @@
 <AuthorizeView>
     <Authorized>
         <div>
-            <a href="account/manage/">Hello, @context.User.Identity.Name!</a>
+            <a href="Account/Manage">Hello, @context.User.Identity.Name!</a>
             <button class="px-4 focus:outline-none" @onclick="BeginSignOut">Log out</button>
         </div>
     </Authorized>
     <NotAuthorized>
         <div>
-            <a href="account/register">Register</a>
+            <a href="Account/Register">Register</a>
             <button class="px-4 focus:outline-none" @onclick="BeginLogIn">Log in</button>
         </div>
     </NotAuthorized>

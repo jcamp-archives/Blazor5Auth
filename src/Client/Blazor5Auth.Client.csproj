@@ -7,6 +7,14 @@
   <PropertyGroup Condition=" '$(RunConfiguration)' == 'Blazor5Auth' ">
     <ExternalConsole>true</ExternalConsole>
   </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="Pages\Account\Manage\_ManageNav.razor.pcss" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="Pages\Account\Manage\_ManageNav.razor.pcss" />
+  </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Blazored.FluentValidation" Version="1.3.2" />
     <PackageReference Include="Blazored.LocalStorage" Version="3.0.0" />

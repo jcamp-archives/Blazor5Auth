@@ -3,54 +3,55 @@
 @using Features.Account.Manage
 @inject HttpClient Http
 
-<h4>Manage Email</h4>
+<TwHeader2>Manage Email</TwHeader2>
+
 @if (!string.IsNullOrEmpty(Success))
 {
-    <div class="alert alert-success alert-dismissible" role="alert">
-        <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+    <TwAlertSuccess>
         @Success
-    </div>
+    </TwAlertSuccess>
 }
-<div class="row">
-    <div class="col-md-6">
-        <EditForm Model="Model">
-            <DataAnnotationsValidator />
-            <ValidationSummary />
 
-            <div class="form-group">
-                <label for="Email">Email</label>
+<TwSubCard>
+    <EditForm Model="Model">
+        <FluentValidationValidator />
+        <TwEditContextClasses />
+
+        <div>
+            <label class="block text-sm font-medium text-gray-700">Email</label>
+            <div class="mt-1 relative rounded-md shadow-sm">
+                <input disabled @bind="@EmailAddress" type="text" class="block w-full pr-10 sm:text-sm border-gray-300 rounded-md bg-gray-100">
                 @if (IsEmailConfirmed)
                 {
-                    <div class="input-group">
-                        <InputText Id="email" class="form-control" @bind-Value="EmailAddress" disabled/>
-                        <div class="input-group-append">
-                            <span class="input-group-text text-success font-weight-bold">✓</span>
-                        </div>
+                    <div class="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
+                        <svg class="h-5 w-5 text-green-600" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
+                        </svg>
                     </div>
                 }
-                else
-                {
-                    <InputText Id="email" class="form-control" @bind-Value="EmailAddress" disabled/>
-                    <button id="email-verification" type="submit" @onclick="SendVerificationEmail" class="btn btn-link">Send verification email</button>
-                }
             </div>
+        </div>
 
-            <div class="form-group">
-                <label for="newemail">New Email</label>
-                <InputText Id="newemail" class="form-control" @bind-Value="Model.NewEmail"/>
-                <ValidationMessage For="@(() => Model.NewEmail)"/>
-            </div>
-            <button type="submit" class="btn btn-primary" @onclick="SendChangeEmail">Change email</button>
-        </EditForm>
-    </div>
-</div>
+        @if (!IsEmailConfirmed)
+        {
+            <a href="#" class="block my-2 text-blue-500" @onclick="SendVerificationEmail" @onclick:preventDefault>Send verification email.</a>
+        }
+
+        <TwInputText @bind-Value="@Model.NewEmail"
+                     ValidationFor="@(() => Model.NewEmail)"
+                     Label="New Email"
+                     type="email" />
+
+        <TwButton @onclick="SendChangeEmail">Change email</TwButton>
+    </EditForm>
+</TwSubCard>
 
 @code
 {
     private ChangeEmail.Command Model = new();
     private string Success { get; set; }
     private string EmailAddress { get; set; }
-    private bool IsEmailConfirmed { get; set; } = true;
+    private bool IsEmailConfirmed { get; set; } = false;
 
     protected override async Task OnInitializedAsync()
     {
@@ -59,7 +60,8 @@
         IsEmailConfirmed = result.IsEmailConfirmed;
     }
 
-    private async Task SendChangeEmail() {
+    private async Task SendChangeEmail()
+    {
         var response = await Http.PostAsJsonAsync("api/account/manage/changeemail", Model);
         var result = await response.Content.ReadFromJsonAsync<ChangeEmail.Result>();
 
@@ -69,15 +71,14 @@
         }
     }
 
-    private async Task SendVerificationEmail() {
-        var response = await Http.PostAsJsonAsync("api/account/manage/sendverificationemail", new {});
+    private async Task SendVerificationEmail()
+    {
+        var response = await Http.PostAsJsonAsync("api/account/manage/sendemailconfirmation", new { });
         var result = await response.Content.ReadFromJsonAsync<ChangeEmail.Result>();
 
         if (result.IsSuccessful)
         {
             Success = result.Message;
         }
-
     }
-
 }

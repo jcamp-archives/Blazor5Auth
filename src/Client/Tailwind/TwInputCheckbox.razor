@@ -1,0 +1,19 @@
+﻿@inherits InputBase<bool>
+
+<div class="flex items-center mt-4">
+    <input id="@Id" type="checkbox" class="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded @CssClass" @bind="@CurrentValue" @attributes="AdditionalAttributes" />
+    @if (!string.IsNullOrWhiteSpace(Label))
+    {
+        <label for="@Id" class="ml-2 block text-sm text-gray-900">
+            @Label
+        </label>
+    }
+</div>
+
+@code{
+    [Parameter] public string Id { get; set; }
+    [Parameter] public string Label { get; set; }
+
+    protected override bool TryParseValueFromString(string value, out bool result, out string validationErrorMessage)
+            => throw new NotSupportedException($"This component does not parse string inputs. Bind to the '{nameof(CurrentValue)}' property, not '{nameof(CurrentValueAsString)}'.");
+}

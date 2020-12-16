@@ -2,39 +2,37 @@
 @inject IAuthService AuthService
 @inject NavigationManager NavigationManager
 
-<h1>Register</h1>
+<TwHeader1>Register</TwHeader1>
 
-<div class="card">
-    <div class="card-body">
-        <h5 class="card-title">Please enter your details</h5>
-        <EditForm Model="RegisterModel" OnValidSubmit="HandleRegistration">
-            <DataAnnotationsValidator />
-            <ServerValidator @ref="serverValidator"/>
-            <ValidationSummary />
+<TwCard Title="Please enter your details" Class="lg:w-1/2">
+    <EditForm Model="RegisterModel" OnValidSubmit="HandleRegistration">
+        <FluentValidationValidator />
+        <ServerValidator @ref="serverValidator" />
+        <TwEditContextClasses />
 
-            <div class="form-group">
-                <label for="email">Email address</label>
-                <InputText Id="email" class="form-control" @bind-Value="RegisterModel.Email" />
-                <ValidationMessage For="@(() => RegisterModel.Email)" />
-            </div>
-            <div class="form-group">
-                <label for="password">Password</label>
-                <InputText Id="password" type="password" class="form-control" @bind-Value="RegisterModel.Password" />
-                <ValidationMessage For="@(() => RegisterModel.Password)" />
-            </div>
-            <div class="form-group">
-                <label for="confirmpassword">Confirm Password</label>
-                <InputText Id="confirmpassword" type="password" class="form-control" @bind-Value="RegisterModel.ConfirmPassword" />
-                <ValidationMessage For="@(() => RegisterModel.ConfirmPassword)" />
-            </div>
-            <button type="submit" class="btn btn-primary">Submit</button>
-        </EditForm>
-    </div>
-</div>
+        <TwInputText @bind-Value="@RegisterModel.Email"
+                     ValidationFor="@(() => RegisterModel.Email)"
+                     Label="Email Address"
+                     type="email"
+                     placeholder="you@example.com" />
 
-@code {
+        <TwInputText @bind-Value="@RegisterModel.Password"
+                     ValidationFor="@(() => RegisterModel.Password)"
+                     Label="Password"
+                     type="password" />
 
-    private Features.Account.Register.Command RegisterModel = new ();
+        <TwInputText @bind-Value="@RegisterModel.ConfirmPassword"
+                     ValidationFor="@(() => RegisterModel.ConfirmPassword)"
+                     Label="Confirm Password"
+                     type="password" />
+
+        <TwButton>Submit</TwButton>
+    </EditForm>
+</TwCard>
+
+@code
+{
+    private Features.Account.Register.Command RegisterModel = new();
     private ServerValidator serverValidator;
 
     private async Task HandleRegistration()
@@ -52,5 +50,4 @@
             serverValidator.DisplayErrors(result.Errors);
         }
     }
-
 }

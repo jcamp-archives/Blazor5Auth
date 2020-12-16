@@ -6,21 +6,22 @@
 @inject NavigationManager NavigationManager
 @inject HttpClient Http
 
-<h1>Configure authenticator app</h1>
+<TwHeader2>Configure authenticator app</TwHeader2>
 
-@if (ShowErrors)
+@if (!string.IsNullOrEmpty(Error))
 {
-    <div class="alert alert-danger" role="alert">
-        <p>@Error</p>
-    </div>
+    <TwAlertError>
+        @Error
+    </TwAlertError>
 }
+
 @if (!string.IsNullOrEmpty(Success))
 {
-    <div class="alert alert-success alert-dismissible" role="alert">
-        <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+    <TwAlertSuccess>
         @Success
-    </div>
+    </TwAlertSuccess>
 }
+
 @if (Model != null)
 {
     <div>
@@ -65,11 +66,11 @@
     </div>
 }
 
-@code {
+@code
+{
     private ServerValidator serverValidator;
     private MfaEnable.Command VerifyModel = new();
     private MfaEnable.QueryResult Model;
-    private bool ShowErrors;
     private string Error = "";
     private string Success = "";
 
@@ -81,8 +82,6 @@
 
     private async Task HandleVerify()
     {
-        ShowErrors = false;
-
         var response = await Http.PostAsJsonAsync("api/account/manage/mfaenable", VerifyModel);
         var result = await response.Content.ReadFromJsonAsync<BaseResult>();
 
@@ -95,6 +94,4 @@
             serverValidator.DisplayErrors(result.Errors);
         }
     }
-
-
 }
