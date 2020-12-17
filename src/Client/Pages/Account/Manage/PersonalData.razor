@@ -3,15 +3,18 @@
 
 <TwHeader2>Personal Data</TwHeader2>
 
-<TwSubCard>
-    <p>Your account contains personal data that you have given us. This page allows you to download or delete that data.</p>
-    <p>
-        <strong>Deleting this data will permanently remove your account, and this cannot be recovered.</strong>
-    </p>
-    <p>
-        <TwNavLink href="/Account/Manage/PersonalData/Download">Download</TwNavLink>
-    </p>
-    <p>
-        <TwNavLink href="/Account/Manage/PersonalData/Delete">Delete</TwNavLink>
-    </p>
+<TwSubCard Class="flex flex-col space-y-4">
+    
+    <div>
+        Your account contains personal data that you have given us. This page allows you to download or delete that data.
+    </div>
+    <div class="font-bold">
+        Deleting this data will permanently remove your account, and this cannot be recovered.
+    </div>
+    <div>
+        <TwButtonLink href="/Account/Manage/PersonalData/Download">Download</TwButtonLink>
+    </div>
+    <div>
+        <TwButtonLink href="/Account/Manage/PersonalData/Delete">Delete</TwButtonLink>
+    </div>
 </TwSubCard>
