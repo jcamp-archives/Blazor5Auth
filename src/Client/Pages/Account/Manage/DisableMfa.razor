@@ -7,19 +7,17 @@
 
 <TwHeader2>Disable multi-factor authentication (MFA)</TwHeader2>
 
-<div class="alert alert-warning" role="alert">
+<TwAlertError>
     <p>
         <strong>This action only disables MFA.</strong>
     </p>
     <p>
         Disabling MFA does not change the keys used in authenticator apps. If you wish to change the key
-        used in an authenticator app you should <a asp-page="./ResetAuthenticator">reset your authenticator keys.</a>
+        used in an authenticator app you should <a hrefe="./ResetAuthenticator">reset your authenticator keys.</a>
     </p>
-</div>
+</TwAlertError>
 
-<div>
-    <button @onclick="HandleDisable" class="btn btn-danger" type="submit">Disable MFA</button>
-</div>
+<TwButton @onclick="HandleDisable" type="submit">Disable MFA</TwButton>
 
 @code {
 

@@ -6,12 +6,9 @@
 
 <TwHeader2>Download Personal Data</TwHeader2>
 
-<div class="row">
-    <div class="col-md-6">
-        <textarea class="form-control" @bind="Body" style="height: 20rem;"></textarea>
-    </div>
-</div>
-
+<TwSubCard>
+    <textarea class="h-80" @bind="Body"></textarea>
+</TwSubCard>
 
 @code
 {
@@ -27,6 +24,4 @@
             Body = result.JsonData;
         }
     }
-
-
 }

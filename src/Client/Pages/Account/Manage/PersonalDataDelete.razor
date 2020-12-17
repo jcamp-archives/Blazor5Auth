@@ -6,28 +6,24 @@
 
 <TwHeader2>Delete Personal Data</TwHeader2>
 
-<div class="alert alert-warning" role="alert">
-    <p>
-        <strong>Deleting this data will permanently remove your account, and this cannot be recovered.</strong>
-    </p>
-</div>
+<TwAlertError>
+    <strong>Deleting this data will permanently remove your account, and this cannot be recovered.</strong>
+</TwAlertError>
 
-<div class="row">
-    <div class="col-md-6">
-        <EditForm Model="Model" OnValidSubmit="SubmitDeleteData">
-            <FluentValidationValidator />
-            <ServerValidator @ref="_serverValidator" />
-            <ValidationSummary />
-            <div class="form-group">
-                <label for="password">Password</label>
-                <InputText Id="password" type="password" class="form-control" @bind-Value="Model.Password"/>
-                <ValidationMessage For="@(() => Model.Password)"/>
-            </div>
-            <button class="btn btn-danger" type="submit">Delete data and close my account</button>
-        </EditForm>
-    </div>
-</div>
+<TwSubCard>
+    <EditForm Model="Model" OnValidSubmit="SubmitDeleteData">
+        <FluentValidationValidator />
+        <ServerValidator @ref="_serverValidator" />
+        <TwEditContextClasses />
 
+        <TwInputText @bind-Value="@Model.Password"
+                      ValidationFor="@(() => Model.Password)"
+                      Label="Password"
+                      type="password" />
+        
+        <button class="px-3 py-2 mt-4 text-white bg-red-600 rounded-md" type="submit">Delete data and close my account</button>
+    </EditForm>
+</TwSubCard>
 
 @code
 {
@@ -54,5 +50,4 @@
             Error = result.Message;
         }
     }
-
 }

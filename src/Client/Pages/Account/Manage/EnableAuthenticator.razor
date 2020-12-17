@@ -39,28 +39,26 @@
             </li>
             <li>
                 <p>Scan the QR Code or enter this key <kbd>@Model.SharedKey</kbd> into your two factor authenticator app. Spaces and casing do not matter.</p>
-                <img src="@($"data:image/png;base64,{Model.QrCodeBase64}")" />
+                <img src="@($"data:image/png;base64,{Model.QrCodeBase64}")" alt=""/>
             </li>
             <li>
                 <p>
                     Once you have scanned the QR code or input the key above, your two factor authentication app will provide you
                     with a unique code. Enter the code in the confirmation box below.
                 </p>
-                <div class="row">
-                    <div class="col-md-6">
-                        <EditForm Model="VerifyModel" OnValidSubmit="HandleVerify">
-                            <FluentValidationValidator />
-                            <ServerValidator @ref="serverValidator" />
-                            <ValidationSummary />
-                            <div class="form-group">
-                                <label for="verify">Verification Code</label>
-                                <InputText Id="verify" class="form-control" @bind-Value="VerifyModel.VerificationCode" />
-                                <ValidationMessage For="@(() => VerifyModel.VerificationCode)" />
-                            </div>
-                            <button type="submit" class="btn btn-primary">Verify</button>
-                        </EditForm>
-                    </div>
-                </div>
+                <TwSubCard>
+                    <EditForm Model="VerifyModel" OnValidSubmit="HandleVerify">
+                        <FluentValidationValidator />
+                        <ServerValidator @ref="serverValidator" />
+                        <TwEditContextClasses />
+                        
+                        <TwInputText @bind-Value="@VerifyModel.VerificationCode"
+                                     ValidationFor="@(() => VerifyModel.VerificationCode)"
+                                     Label="Verification Code" />
+                
+                        <TwButton>Verify</TwButton>
+                    </EditForm>                    
+                </TwSubCard>
             </li>
         </ol>
     </div>
@@ -77,7 +75,6 @@
     protected override async Task OnInitializedAsync()
     {
         Model = await Http.GetFromJsonAsync<MfaEnable.QueryResult>("api/account/manage/mfaenable");
-
     }
 
     private async Task HandleVerify()

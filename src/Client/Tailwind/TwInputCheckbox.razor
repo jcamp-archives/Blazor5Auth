@@ -4,7 +4,7 @@
     <input id="@Id" type="checkbox" class="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded @CssClass" @bind="@CurrentValue" @attributes="AdditionalAttributes" />
     @if (!string.IsNullOrWhiteSpace(Label))
     {
-        <label for="@Id" class="ml-2 block text-sm text-gray-900">
+        <label for="@Id" class="ml-2 block flex-grow text-sm text-gray-900">
             @Label
         </label>
     }
