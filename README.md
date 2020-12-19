@@ -11,7 +11,17 @@ I put a full copy of the IdentityServer-based code into this repo as a reference
 
 I did change it to use Sqlite so it could run cross-platform.
 
+## MongoDb Branch
+Uses MongoFramework with MongoDb for data storage
+
 ## References / Thanks
 Blueprint and much code came from Chris Sainty's blog article, [Authentication with client-side Blazor using WebAPI and ASP.NET Core Identity](https://chrissainty.com/securing-your-blazor-apps-authentication-with-clientside-blazor-using-webapi-aspnet-core-identity/)
 
 [API / Email Service Example](https://github.com/cornflourblue/aspnet-core-3-signup-verification-api)
+
+### SMTP Settings
+Use secrets to store these without commiting
+- dotnet user-secrets set "SmtpSettings:Server" "smtp.mailtrap.io"
+- dotnet user-secrets set "SmtpSettings:Port" "2525"
+- dotnet user-secrets set "SmtpSettings:Username" ""
+- dotnet user-secrets set "SmtpSettings:Password" ""
