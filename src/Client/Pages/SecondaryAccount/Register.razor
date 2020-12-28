@@ -1,8 +1,8 @@
-﻿@page "/account/register"
-@inject IAuthService AuthService
+﻿@page "/secondary/register"
+@inject ISecondaryAuthService AuthService
 @inject NavigationManager NavigationManager
 
-<TwHeader1>Register</TwHeader1>
+<TwHeader1>Secondary Register</TwHeader1>
 
 @if (!string.IsNullOrEmpty(Error))
 {
@@ -39,7 +39,7 @@
 
 @code
 {
-    private Features.Account.Register.Command RegisterModel = new();
+    private Features.Account.SecondaryRegister.Command RegisterModel = new();
     private ServerValidator serverValidator;
     private string Error = "";
 

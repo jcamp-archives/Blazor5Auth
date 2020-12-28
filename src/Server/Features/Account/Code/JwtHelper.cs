@@ -7,14 +7,15 @@ using System.Threading.Tasks;
 using Blazor5Auth.Server.Models;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
+using MongoFramework.AspNetCore.Identity;
 
 namespace Features.Account
 {
     public interface IJwtHelper
     {
-        string GenerateJwt(ApplicationUser user, IList<string> roles);
+        string GenerateJwt<TUser>(TUser user, IList<string> roles) where TUser : MongoIdentityUser;
     }
-    
+
     public class JwtHelper : IJwtHelper
     {
         private readonly IConfiguration _configuration;
@@ -23,8 +24,8 @@ namespace Features.Account
         {
             _configuration = configuration;
         }
-        
-        public string GenerateJwt(ApplicationUser user, IList<string> roles)
+
+        public string GenerateJwt<TUser>(TUser user, IList<string> roles) where TUser : MongoIdentityUser
         {
             var claims = new List<Claim>();
 
@@ -32,6 +33,8 @@ namespace Features.Account
 
             //this is needed for identity system to retrieve full user object
             claims.Add(new Claim(ClaimTypes.NameIdentifier, user.Id));
+
+            claims.Add(new Claim(ClaimTypes.Spn, user.GetType().Name));
 
             foreach (var role in roles)
             {
@@ -52,6 +55,6 @@ namespace Features.Account
 
             return new JwtSecurityTokenHandler().WriteToken(token);
         }
-        
+
     }
 }

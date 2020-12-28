@@ -18,6 +18,8 @@ Uses MongoFramework with MongoDb for data storage
 Blueprint and much code came from Chris Sainty's blog article, [Authentication with client-side Blazor using WebAPI and ASP.NET Core Identity](https://chrissainty.com/securing-your-blazor-apps-authentication-with-clientside-blazor-using-webapi-aspnet-core-identity/)
 
 [API / Email Service Example](https://github.com/cornflourblue/aspnet-core-3-signup-verification-api)
+[Documentation on Authorization](https://docs.microsoft.com/en-us/aspnet/core/security/authorization/secure-data?view=aspnetcore-5.0)
+
 
 ### SMTP Settings
 Use secrets to store these without commiting

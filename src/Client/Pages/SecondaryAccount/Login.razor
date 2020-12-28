@@ -1,0 +1,70 @@
+﻿@page "/secondary/login"
+@using Features.Account
+@inject ISecondaryAuthService AuthService
+@inject NavigationManager NavigationManager
+
+<TwHeader1>Secondary Login</TwHeader1>
+
+@if (!string.IsNullOrEmpty(Error))
+{
+    <TwAlertError>
+        @Error
+    </TwAlertError>
+}
+
+<TwCard Title="Please enter your details" Class="lg:w-1/2">
+    <EditForm Model="loginModel" OnValidSubmit="HandleLogin">
+        <FluentValidationValidator />
+        <TwEditContextClasses />
+
+        <TwInputText @bind-Value="@loginModel.Email"
+                     ValidationFor="@(() => loginModel.Email)"
+                     Label="Email Address"
+                     type="email"
+                     placeholder="you@example.com" />
+
+        <TwInputText @bind-Value="@loginModel.Password"
+                     ValidationFor="@(() => loginModel.Password)"
+                     Label="Password"
+                     type="password" />
+
+        <TwButton>Submit</TwButton>
+    </EditForm>
+    <div class="flex flex-col bg-gray-50 mt-4 px-4 py-4 sm:px-6">
+        <a class="text-blue-500" href="/Account/ForgotPassword">Forgot your password?</a>
+        <a class="text-blue-500" href="/Account/Register">Register as a new user</a>
+        <a class="text-blue-500" href="/Account/ResendEmailConfirmation">Resend email confirmation</a>
+    </div>
+</TwCard>
+
+@code
+{
+    private SecondaryLoginPassword.Command loginModel = new SecondaryLoginPassword.Command();
+    private string Error = "";
+
+    private async Task HandleLogin()
+    {
+        var result = await AuthService.Login(loginModel);
+
+        if (result.IsSuccessful)
+        {
+            NavigationManager.NavigateToReturnUrl("/");
+        }
+        else if (result.RequiresTwoFactor)
+        {
+            NavigationManager.NavigateWithExistingReturnUrl("/Account/LoginWith2fa");
+        }
+        else if (result.RequiresEmailConfirmation)
+        {
+            NavigationManager.NavigateWithExistingReturnUrl("/Account/ResendEmailConfirmation");
+        }
+        else if (result.IsLockedOut)
+        {
+            NavigationManager.NavigateTo("/Account/Lockout");
+        }
+        else
+        {
+            Error = result.Message;
+        }
+    }
+}

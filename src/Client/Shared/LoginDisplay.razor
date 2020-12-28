@@ -2,17 +2,31 @@
 
 @inject NavigationManager Navigation
 
-<AuthorizeView>
+<AuthorizeView Policy="@Policies.IsPrimaryUser">
     <Authorized>
         <div>
             <a href="Account/Manage">Hello, @context.User.Identity.Name!</a>
-            <button class="px-4 focus:outline-none" @onclick="BeginSignOut">Log out</button>
+            <button class="px-4 focus:outline-none" @onclick="BeginSignOut">Primary Log out</button>
         </div>
     </Authorized>
+</AuthorizeView>
+
+<AuthorizeView Policy="@Policies.IsSecondaryUser">
+    <Authorized>
+        <div>
+            <a href="Account/Manage">Hello, @context.User.Identity.Name!</a>
+            <button class="px-4 focus:outline-none" @onclick="BeginSecondarySignOut">Secondary Log out</button>
+        </div>
+    </Authorized>
+</AuthorizeView>
+<AuthorizeView>
     <NotAuthorized>
         <div>
             <a href="Account/Register">Register</a>
             <button class="px-4 focus:outline-none" @onclick="BeginLogIn">Log in</button>
+
+            <a href="Secondary/Register">Secondary Register</a>
+            <button class="px-4 focus:outline-none" @onclick="BeginSecondaryLogIn">Secondary Log in</button>
         </div>
     </NotAuthorized>
 </AuthorizeView>
@@ -26,5 +40,15 @@
     private void BeginSignOut(MouseEventArgs args)
     {
         Navigation.NavigateWithNewReturnUrl("/account/logout");
+    }
+
+    private void BeginSecondaryLogIn(MouseEventArgs args)
+    {
+        Navigation.NavigateWithNewReturnUrl("/secondary/login");
+    }
+
+    private void BeginSecondarySignOut(MouseEventArgs args)
+    {
+        Navigation.NavigateWithNewReturnUrl("/secondary/logout");
     }
 }

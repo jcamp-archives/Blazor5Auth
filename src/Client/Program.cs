@@ -26,10 +26,13 @@ namespace Blazor5Auth.Client
             {
                 config.AddPolicy(Policies.IsAdmin, Policies.IsAdminPolicy());
                 config.AddPolicy(Policies.IsUser, Policies.IsUserPolicy());
+                config.AddPolicy(Policies.IsPrimaryUser, Policies.IsPrimaryUserPolicy());
+                config.AddPolicy(Policies.IsSecondaryUser, Policies.IsSecondaryUserPolicy());
             });
             builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(builder.HostEnvironment.BaseAddress) });
             builder.Services.AddScoped<AuthenticationStateProvider, ApiAuthenticationStateProvider>();
             builder.Services.AddScoped<IAuthService, AuthService>();
+            builder.Services.AddScoped<ISecondaryAuthService, SecondaryAuthService>();
 
             await builder.Build().RunAsync();
         }

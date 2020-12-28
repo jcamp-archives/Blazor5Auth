@@ -45,6 +45,15 @@ namespace Blazor5Auth.Server
 
             services.AddMongoIdentity<ApplicationUser, MongoIdentityRole, ApplicationDbContext>(options => options.SignIn.RequireConfirmedAccount = true);
 
+            services.AddIdentityCore<SecondaryUser>(o =>
+            {
+                o.SignIn.RequireConfirmedAccount = false;
+            })
+            .AddSignInManager()
+            .AddDefaultTokenProviders()
+            .AddRoles<MongoIdentityRole>()
+            .AddMongoFrameworkStores<ApplicationDbContext>();
+
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                 .AddJwtBearer(options =>
                 {
